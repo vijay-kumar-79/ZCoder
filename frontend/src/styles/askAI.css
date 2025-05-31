@@ -1,0 +1,111 @@
+.ask-ai-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  .conversation {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 8px;
+  }
+
+  .message {
+    margin-bottom: 15px;
+    display: flex;
+  }
+
+  .message.user {
+    justify-content: flex-end;
+  }
+
+  .message.ai {
+    justify-content: flex-start;
+  }
+
+  .message-content {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    word-wrap: break-word;
+  }
+
+  .user .message-content {
+    background: #007bff;
+    color: white;
+  }
+
+  .ai .message-content {
+    background: #e9ecef;
+    color: black;
+  }
+
+  .loading {
+    color: #666;
+    font-style: italic;
+  }
+
+  .message-form {
+    display: flex;
+    gap: 10px;
+  }
+
+  .message-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .message-form button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .message-form button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+  }
+
+  /* Add to your askAI.css */
+  .react-markdown code {
+    background-color: #f0f0f0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+
+  .react-markdown pre {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+  }
+
+  .react-markdown pre code {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .react-markdown ul,
+  .react-markdown ol {
+    padding-left: 20px;
+    margin: 10px 0;
+  }
+
+  .react-markdown li {
+    margin-bottom: 5px;
+  }
+
+  .react-markdown strong {
+    font-weight: bold;
+  }
+}
