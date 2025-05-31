@@ -13,7 +13,7 @@ app.use(cors({
 }))
 
 async function main() {
-    await mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/Zcoder");
+    await mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/zcoder");
     console.log("Connected to DB")
 }
 
@@ -23,16 +23,16 @@ app.listen(3000, () => {
 })
 
 const midwareFunc = (req, res, next) => {
-  let jwtToken
+  let jwtoken
   const auth = req.headers['authorization']
   if (auth !== undefined) {
-    jwtToken = auth.split(' ')[1]
+    jwtoken = auth.split(' ')[1]
   }
-  if (jwtToken === undefined) {
+  if (jwtoken === undefined) {
     res.status(401)
     res.send('Invalid JWT Token')
   } else {
-    jwt.verify(jwtToken, 'MY_SECRET_TOKEN', async (error, payload) => {
+    jwt.verify(jwtoken, 'MY_SECRET_TOKEN', async (error, payload) => {
       if (error) {
         res.status(401)
         res.send('Invalid JWT Token')
@@ -78,7 +78,7 @@ app.post('/login/', async (req, res) => {
   const dbuser = await User.find({ Username: username })
   console.log(dbuser);
   if (dbuser.length === 0) {
-    res.status(400).send('Invalid user')
+    res.status(400).send('*Username does not exist')
   } else {
     const checkPw = await bcrypt.compare(password, dbuser[0].HashedPassword)
     if (checkPw) {
@@ -90,7 +90,7 @@ app.post('/login/', async (req, res) => {
       res.send(jwtoken)
     } else {
       res.status(400)
-      res.send('Invalid password')
+      res.send('*Incorrect Password')
     }
     // res.status(200).send(dbuser[0]);
   }

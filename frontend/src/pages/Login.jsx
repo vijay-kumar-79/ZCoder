@@ -6,8 +6,9 @@ import './Login.css'
 function LoginPage() {
   const [hide, setHide] = useState(true);
   const navigate = useNavigate();
-  const togglePassword = () => {
-    setHide(!hide);
+  const togglePassword = (e) => {
+    console.log(e.target.checked);
+    setHide(!e.target.checked);
   }
 
   const formSubmitted = async (event) => {
@@ -15,6 +16,8 @@ function LoginPage() {
     const form = document.getElementById('login-form');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
+    const errorMsg = document.getElementById('login-error-msg');
+    errorMsg.textContent ="";
     form.reset();
     setHide(true);
     try {
@@ -33,7 +36,7 @@ function LoginPage() {
       } else {
         const error = await response.text();
         console.error('Error registering user:', error);
-        alert(`Login failed: ${error}`);
+        errorMsg.textContent =`${error}`;
       }
     } catch (error) {
       console.error('Network error:', error);
@@ -57,10 +60,11 @@ function LoginPage() {
                 <input type={hide ? "password" : "text"} id="passweord" className="form-input" name="password" placeholder="Password" onChange={(e)=>{e.preventDefault()}} required />
             </div>
             <div className="checkbox-container">
-                <input type="checkbox" className="checkbox" id="showpassword" onChange={togglePassword}/>
+                <input type="checkbox" className="checkbox" id="showpassword" checked={!hide} onChange={togglePassword}/>
                 <label htmlFor="showpassword" className="checkbox-label">Show Password</label>
             </div>
             <button type="Submit" className="login-button">Login</button>
+            <p id='login-error-msg'></p>
         </form>
       </div>
       <div className="login-footer">
