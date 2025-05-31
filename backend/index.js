@@ -1,5 +1,5 @@
-const connectDB = require('./config/db')
 const express = require('express')
+const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const Scholarship = require('./Models/scholarship-model')
@@ -12,11 +12,37 @@ app.use(cors({
   origin: '*'
 }))
 
-connectDB();
+async function main() {
+    await mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/Zcoder");
+    console.log("Connected to DB")
+}
 
+main().catch(err => console.log(err))
 app.listen(3000, () => {
   console.log('Server Running at http://localhost:3000/')
 })
+
+const midwareFunc = (req, res, next) => {
+  let jwtToken
+  const auth = req.headers['authorization']
+  if (auth !== undefined) {
+    jwtToken = auth.split(' ')[1]
+  }
+  if (jwtToken === undefined) {
+    res.status(401)
+    res.send('Invalid JWT Token')
+  } else {
+    jwt.verify(jwtToken, 'MY_SECRET_TOKEN', async (error, payload) => {
+      if (error) {
+        res.status(401)
+        res.send('Invalid JWT Token')
+      } else {
+        req.user_id = payload.user_id
+        next()
+      }
+    })
+  }
+}
 
 app.post('/register/', async (request, response) => {
   const {username, password, email} = request.body
@@ -52,7 +78,7 @@ app.post('/login/', async (req, res) => {
   const dbuser = await User.find({ Username: username })
   console.log(dbuser);
   if (dbuser.length === 0) {
-    res.status(400).send('*Username does not exist')
+    res.status(400).send('Invalid user')
   } else {
     const checkPw = await bcrypt.compare(password, dbuser[0].HashedPassword)
     if (checkPw) {
@@ -64,7 +90,7 @@ app.post('/login/', async (req, res) => {
       res.send(jwtoken)
     } else {
       res.status(400)
-      res.send('*Incorrect Password')
+      res.send('Invalid password')
     }
     // res.status(200).send(dbuser[0]);
   }
