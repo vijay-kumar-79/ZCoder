@@ -181,12 +181,3 @@
 .login-footer a:hover::after {
   width: 100%;
 }
-
-#login-error-msg{
-  color: #ffffff;
-  font-size: 0.9rem;
-  text-align: center;
-  margin-top: 1rem;
-  font-size: large;
-  text-shadow: 0 0 3px rgb(220, 60, 60);
-}
