@@ -1,5 +1,5 @@
+const connectDB = require('./config/db')
 const express = require('express')
-const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const Scholarship = require('./Models/scholarship-model')
@@ -12,37 +12,11 @@ app.use(cors({
   origin: '*'
 }))
 
-async function main() {
-    await mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/zcoder");
-    console.log("Connected to DB")
-}
+connectDB();
 
-main().catch(err => console.log(err))
 app.listen(3000, () => {
   console.log('Server Running at http://localhost:3000/')
 })
-
-const midwareFunc = (req, res, next) => {
-  let jwtoken
-  const auth = req.headers['authorization']
-  if (auth !== undefined) {
-    jwtoken = auth.split(' ')[1]
-  }
-  if (jwtoken === undefined) {
-    res.status(401)
-    res.send('Invalid JWT Token')
-  } else {
-    jwt.verify(jwtoken, 'MY_SECRET_TOKEN', async (error, payload) => {
-      if (error) {
-        res.status(401)
-        res.send('Invalid JWT Token')
-      } else {
-        req.user_id = payload.user_id
-        next()
-      }
-    })
-  }
-}
 
 app.post('/register/', async (request, response) => {
   const {username, password, email} = request.body
