@@ -1,5 +1,40 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
 }
+
+  :root {
+    --primary-color: #4a90e2;
+    --secondary-color: #f5f5f5;
+    --text-color: #333;
+    --background-color: #f9f9f9 !important;
+    width: 100vw;
+    margin: 0;
+  }
+
+  .App {
+    display: none;
+    overflow: scroll;
+    height: 100vh;
+    /* background: linear-gradient(135deg, #1a1a1a 0%, #3c0000 50%, #000000 100%); */
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100vw;
+  }
+
+  .App::-webkit-scrollbar {
+    background-color: #000000;
+    height: 8px;
+    width: 8px;
+  }
+  .App::-webkit-scrollbar-thumb {
+    background-color: #3c0000;
+    border-radius: 5px;
+    border: 1px solid #000000;
+  }

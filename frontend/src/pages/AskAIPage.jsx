@@ -19,7 +19,7 @@ function AskAIPage() {
       const userMessage = { sender: "user", text: message };
       setConversation((prev) => [...prev, userMessage]);
 
-      const response = await axios.post("http://localhost:5000/api/ask-ai", {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/ask-ai`, {
         message,
       });
 

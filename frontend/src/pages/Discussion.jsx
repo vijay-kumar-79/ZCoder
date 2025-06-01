@@ -1,63 +1,105 @@
-// src/pages/Discussion.js
+// src/components/Discussions.js
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import "../styles/discussion.css";
+// import Loader from "./Loader";
+import "../styles/Discussion.css";
 
-function Discussion() {
-  const { id } = useParams();
+const Discussions = () => {
   const navigate = useNavigate();
-  const api = import.meta.env.VITE_BACKEND_URL;
-  
+  const { titleSlug } = useParams();
   const [solutions, setSolutions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const backend = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchSolutions = async () => {
       try {
-        const { data } = await axios.get(`${api}/discussion/${id}`);
-        setSolutions(data.posts || []);
-        setIsLoading(false);
+        const res = await axios.get(`${backend}/api/solutions/${titleSlug}`);
+        setSolutions(res.data);
       } catch (err) {
-        setError("Failed to load solutions");
-        setIsLoading(false);
+        setError(err.response?.data?.message || err.message);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchSolutions();
-  }, [id, api]);
+  }, [titleSlug]);
 
-  if (isLoading) return <div className="loading">Loading solutions...</div>;
-  if (error) return <div className="error">{error}</div>;
+  const handleVote = async (solutionId, voteType) => {
+    try {
+      await axios.post(`${backend}/api/solutions/vote`, { solutionId, voteType });
+      setSolutions(
+        solutions.map((sol) =>
+          sol._id === solutionId
+            ? {
+                ...sol,
+                votes: voteType === "upvote" ? sol.votes + 1 : sol.votes - 1,
+              }
+            : sol
+        )
+      );
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+    }
+  };
+
+  if (loading) return <>Loading...</>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="discussion-page">
-      <button onClick={() => navigate(-1)} className="back-button">
-        Back to Problem
-      </button>
-      
-      <h1>Solutions for Problem #{id}</h1>
-      
+    <div className="discussions-container">
+      <h1>Solutions for {titleSlug}</h1>
       <div className="solutions-list">
-        {solutions.length > 0 ? (
-          solutions.map((solution, index) => (
-            <div key={index} className="solution-card">
+        {solutions.length === 0 ? (
+          <p>No solutions submitted yet. Be the first one!</p>
+        ) : (
+          solutions.map((solution) => (
+            <div
+              key={solution._id}
+              className="solution-card"
+              onClick={() => navigate(`/solution/${solution._id}`)}
+            >
               <div className="solution-header">
-                <span className="solution-author">{solution.userId?.username || "Anonymous"}</span>
-                <span className="solution-date">
-                  {new Date(solution.createdAt).toLocaleString()}
+                <span className="author">{solution.author.Username}</span>
+                <span className="votes">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleVote(solution._id, "upvote");
+                    }}
+                    className="vote-btn"
+                  >
+                    ↑
+                  </button>
+                  {solution.votes}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleVote(solution._id, "downvote");
+                    }}
+                    className="vote-btn"
+                  >
+                    ↓
+                  </button>
+                </span>
+                <span className="date">
+                  {new Date(solution.createdAt).toLocaleDateString()}
                 </span>
               </div>
-              <div className="solution-content">{solution.content}</div>
+              <pre className="solution-code">
+                <code>{solution.code.substring(0, 20)}...</code>
+              </pre>
+              <div className="solution-footer">
+                <span className="language">{solution.language}</span>
+              </div>
             </div>
           ))
-        ) : (
-          <p>No solutions posted yet.</p>
         )}
       </div>
     </div>
   );
-}
+};
 
-export default Discussion;
+export default Discussions;

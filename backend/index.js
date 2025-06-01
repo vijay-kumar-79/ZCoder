@@ -1,11 +1,16 @@
 // server.js
 const express = require("express");
 const http = require("http");
+// const jwt = require("jsonwebtoken");
+// const bcrypt = require("bcrypt");
 const socketIo = require("socket.io");
 const cors = require("cors");
-const Message = require("./models/messageModel.js");
+// const Message = require("./models/messageModel.js");
 const connectDB = require("./config/db");
 const aiRoute = require("./routes/AskAI.js");
+const loginRoute = require("./routes/LoginRoute.js");
+const solutionsRoute = require("./routes/Solutions.js");
+const socketHandler = require("./socketHandler");
 require("dotenv").config();
 
 // Connect to MongoDB
@@ -15,105 +20,31 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    origin: "*",
   },
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Headers", "Authorization, Content-Type");
+  next();
+});
 app.use(express.json());
 
 // routes
 app.use("/api", aiRoute);
+app.use("/", loginRoute);
+app.use("/api/solutions", solutionsRoute);
 app.get("/ping", (req, res) => {
   console.log(process.env.GROQ_API_KEY);
   res.json({ msg: "API is working !!" });
 });
 
-// Room storage
-let rooms = new Map();
+socketHandler(io);
 
-io.on("connection", (socket) => {
-  console.log("New client connected:", socket.id);
-
-  // Join room
-  socket.on("join-room", async ({ username, roomId }) => {
-    currentUsername = username;
-    currentRoomId = roomId;
-
-    socket.join(roomId);
-
-    if (!rooms.has(roomId)) {
-      rooms.set(roomId, {
-        users: new Set(),
-        sharedText: "",
-      });
-    }
-    rooms.get(roomId).users.add(username);
-
-    // Load previous messages from database
-    try {
-      const previousMessages = await Message.find({ roomId })
-        .sort({ timestamp: 1 })
-        .limit(100);
-
-      socket.emit("room-init", {
-        users: Array.from(rooms.get(roomId).users),
-        sharedText: rooms.get(roomId).sharedText,
-        previousMessages,
-      });
-    } catch (err) {
-      console.error("Error loading messages:", err);
-    }
-
-    socket.to(roomId).emit("user-joined", username);
-    io.to(roomId).emit("room-users", Array.from(rooms.get(roomId).users));
-  });
-
-  // Handle chat messages
-  socket.on("send-msg", async ({ roomId, message, username }) => {
-    try {
-      // Save message to database
-      const newMessage = new Message({ roomId, username, message });
-      await newMessage.save();
-
-      // Broadcast to all in room
-      io.to(roomId).emit("recieve-msg", {
-        username,
-        message,
-        timestamp: newMessage.timestamp,
-      });
-    } catch (err) {
-      console.error("Error saving message:", err);
-    }
-  });
-
-  // Handle text edits (shared document)
-  socket.on("text-edit", ({ roomId, text }) => {
-    if (rooms.has(roomId)) {
-      rooms.get(roomId).sharedText = text;
-    }
-    socket.to(roomId).emit("text-edit", text);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
-
-    if (currentRoomId && currentUsername && rooms.has(currentRoomId)) {
-      rooms.get(currentRoomId).users.delete(currentUsername);
-
-      if (rooms.get(currentRoomId).users.size === 0) {
-        rooms.delete(currentRoomId);
-      } else {
-        io.to(currentRoomId).emit("user-left", currentUsername);
-        io.to(currentRoomId).emit(
-          "room-users",
-          Array.from(rooms.get(currentRoomId).users)
-        );
-      }
-    }
-  });
-});
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

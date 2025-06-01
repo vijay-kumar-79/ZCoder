@@ -17,7 +17,7 @@ function RoomPage() {
   const socket = useRef();
 
   useEffect(() => {
-    socket.current = io("http://localhost:5000");
+    socket.current = io("http://localhost:3000");
 
     socket.current.emit("join-room", { roomId, username });
 

@@ -1,0 +1,112 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+.register-container {
+  background: white;
+  /* background: rgba(10, 10, 10, 0.9); */
+  padding: 3rem;
+  border-radius: 16px;
+  /* box-shadow: 0 0 20px rgba(255, 0, 0, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.1); */
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  width: 450px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 255, 0, 0.5);
+  /* border: 1px solid rgba(255, 0, 0, 0.5); */
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  transition: transform 0.5s ease;
+}
+
+.register-container:hover {
+  transform: translateZ(20px);
+}
+
+#register-form{
+  text-align: left;
+}
+
+.register-button {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+  /* background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); */
+  color: #ffffff;
+  /* color: #000000; */
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+  /* box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); */
+}
+
+.register-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba( 0, 255, 0, 0.6);
+  /* box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); */
+  background: linear-gradient(135deg, #3dff33 0%, #2ae600 100%);
+  /* background: linear-gradient(135deg, #ff3333 0%, #e60000 100%); */
+}
+
+.register-footer {
+  /* color: #ffffff; */
+  color: #000000;
+  text-align: center;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+  /* text-shadow: 0 0 5px rgba(255, 0, 0, 0.3); */
+}
+
+.register-footer a {
+  color: #51ff00;
+  /* color: #ff0000; */
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.register-footer a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #73ff00;
+  /* background: #ff0000; */
+  transition: width 0.3s ease;
+}
+
+.register-footer a:hover::after {
+  width: 100%;
+}
+
+#register-error-msg{
+  color: #000000;
+  /* color: #ffffff; */
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: large;
+  text-shadow: 0 0 3px rgb(135, 220, 60);
+  /* text-shadow: 0 0 3px rgb(220, 60, 60); */
+}
