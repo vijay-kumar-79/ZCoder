@@ -2,6 +2,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
+import Logo from '../assets/logo.png'
 
 function Header() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ function Header() {
   return (
     <header className="navbar">
       <nav>
+        <img src={Logo} alt="Logo" className="nav-logo" />
         <ul className="nav-links">
           <li>
             <NavLink to="/">Home</NavLink>
