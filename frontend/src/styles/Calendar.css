@@ -1,0 +1,444 @@
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: #0a0a0a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.calendar-wrapper {
+    background: #1a1a1a;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    width: 90vw;
+    max-width: 1200px;
+    height: 70vh;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+/* Left side - Calendar */
+.calendar-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.calendar-header {
+    margin-bottom: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.nav-button {
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #444;
+}
+
+.nav-button:hover {
+    background: #444;
+    border-color: #555;
+}
+
+.nav-button.year-nav {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+}
+
+.nav-button.year-nav:hover {
+    background: #3a3a3a;
+    border-color: #4a4a4a;
+}
+
+.month-year {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    min-width: 180px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.calendar-grid {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #333;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #2a2a2a;
+    flex-shrink: 0;
+}
+
+.day-header {
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: 600;
+    color: #ccc;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-right: 1px solid #333;
+}
+
+.day-header:last-child {
+    border-right: none;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    background: #1a1a1a;
+    flex: 1;
+}
+
+.calendar-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+    color: #fff;
+    background: #1a1a1a;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.calendar-day:nth-child(7n) {
+    border-right: none;
+}
+
+.calendar-day:hover {
+    background: #2a2a2a;
+    color: #fff;
+}
+
+.calendar-day.empty {
+    cursor: default;
+    background: #111;
+    color: #555;
+}
+
+.calendar-day.empty:hover {
+    background: #111;
+}
+
+/* Single color for all contests - removed platform-specific colors */
+.calendar-day.has-contest {
+    background: #0066cc;
+    color: #ffffff;
+    font-weight: 600;
+    position: relative;
+}
+
+.calendar-day.has-contest:hover {
+    background: #0052a3;
+}
+
+.day-number {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.contest-indicator {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+}
+
+.contest-dot {
+    width: 5px;
+    height: 5px;
+    background: #00ff88;
+    border-radius: 50%;
+    font-size: 0;
+}
+
+.contest-count {
+    font-size: 8px;
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 1px solid #fff;
+}
+
+/* Right side - Contests */
+.contests-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #2a2a2a;
+    border-radius: 8px;
+    border: 1px solid #333;
+    padding: 15px;
+    overflow: hidden;
+}
+
+.contests-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.contests-section h3 {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #0066cc;
+    padding-bottom: 8px;
+    flex-shrink: 0;
+}
+
+.contests-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 5px;
+}
+
+.contest-item {
+    background: #1a1a1a;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.contest-item:hover {
+    border-color: #0066cc;
+    background: #222;
+}
+
+.contest-item h4 {
+    color: #0066cc;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.contest-item p {
+    margin: 6px 0;
+    color: #ccc;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.label {
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Single color for all platform badges */
+.platform-badge {
+    background: #0066cc;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-right: 8px;
+    text-transform: uppercase;
+}
+
+.contest-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 12px;
+    background: #0066cc;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid #0066cc;
+}
+
+.contest-link:hover {
+    background: #0052a3;
+    border-color: #0052a3;
+}
+
+.no-contests {
+    text-align: center;
+    color: #ccc;
+    font-size: 12px;
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading {
+    text-align: center;
+    color: #fff;
+    padding: 40px;
+}
+
+.loading-spinner {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #0066cc;
+}
+
+.error-message {
+    background: #cc0000;
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid #aa0000;
+}
+
+/* Custom scrollbar for contests list */
+.contests-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.contests-list::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 3px;
+}
+
+.contests-list::-webkit-scrollbar-thumb {
+    background: #0066cc;
+    border-radius: 3px;
+}
+
+.contests-list::-webkit-scrollbar-thumb:hover {
+    background: #0052a3;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .calendar-wrapper {
+        width: 95vw;
+        height: 75vh;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .calendar-section {
+        flex: 1;
+    }
+
+    .contests-sidebar {
+        flex: 1;
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .calendar-container {
+        padding: 15px;
+    }
+
+    .calendar-wrapper {
+        width: 98vw;
+        height: 80vh;
+        padding: 15px;
+        flex-direction: column;
+    }
+
+    .month-year {
+        font-size: 18px;
+        min-width: 160px;
+    }
+
+    .nav-button {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .calendar-day {
+        font-size: 12px;
+    }
+
+    .day-header {
+        padding: 10px 6px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-wrapper {
+        width: 98vw;
+        height: 85vh;
+        padding: 12px;
+        flex-direction: column;
+    }
+
+    .month-year {
+        font-size: 16px;
+        min-width: 140px;
+    }
+
+    .calendar-day {
+        font-size: 11px;
+    }
+
+    .day-header {
+        padding: 8px 4px;
+        font-size: 9px;
+    }
+}

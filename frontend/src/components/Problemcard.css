@@ -1,0 +1,55 @@
+.problem-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  background-color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.problem-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.problem-id {
+  color: #777;
+}
+
+.problem-title {
+  flex-grow: 1;
+}
+
+.locked-icon {
+  color: #e91e63;
+}
+
+.card-info {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tags {
+  margin-top: 8px;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #f1f1f1;
+  padding: 4px 8px;
+  border-radius: 12px;
+  margin: 2px;
+  font-size: 0.8rem;
+  color: #333;
+}
