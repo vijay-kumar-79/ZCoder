@@ -14,6 +14,14 @@ const Discussions = () => {
   const backend = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
+    // Redirect to the login page if the user is not authenticated
+    const jwtoken = localStorage.getItem("jwtoken");
+    if (jwtoken === null || jwtoken === undefined) {
+      navigate("/login");
+    }
+  });
+
+  useEffect(() => {
     const fetchSolutions = async () => {
       try {
         const res = await axios.get(`${backend}/api/solutions/${titleSlug}`);
@@ -29,7 +37,10 @@ const Discussions = () => {
 
   const handleVote = async (solutionId, voteType) => {
     try {
-      await axios.post(`${backend}/api/solutions/vote`, { solutionId, voteType });
+      await axios.post(`${backend}/api/solutions/vote`, {
+        solutionId,
+        voteType,
+      });
       setSolutions(
         solutions.map((sol) =>
           sol._id === solutionId

@@ -7,6 +7,14 @@ function RoomSelection() {
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
 
+  useEffect(() => {
+    // Redirect to the login page if the user is not authenticated
+    const jwtoken = localStorage.getItem("jwtoken");
+    if (jwtoken === null || jwtoken === undefined) {
+      navigate("/login");
+    }
+  });
+
   const joinRoom = (event) => {
     event.preventDefault();
     const trimmedUsername = username.trim();
@@ -40,7 +48,7 @@ function RoomSelection() {
 
     setUsername(trimmedUsername);
     let newRoomId = roomId;
-    if(!roomId.trim()){
+    if (!roomId.trim()) {
       newRoomId = Math.random().toString(36).substring(2, 8);
     }
     navigate(`/rooms/${newRoomId}`, { state: { username: trimmedUsername } });

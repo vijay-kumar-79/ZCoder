@@ -18,6 +18,14 @@ const ProblemDetail = () => {
   const LEETCODE_API = `https://leetcode-api-mu.vercel.app/select?titleSlug=${titleSlug}`;
 
   useEffect(() => {
+    // Redirect to the login page if the user is not authenticated
+    const jwtoken = localStorage.getItem("jwtoken");
+    if (jwtoken === null || jwtoken === undefined) {
+      navigate("/login");
+    }
+  });
+
+  useEffect(() => {
     async function fetchProblem() {
       try {
         const res = await axios.get(LEETCODE_API);
