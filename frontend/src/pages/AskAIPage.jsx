@@ -9,6 +9,14 @@ function AskAIPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [conversation, setConversation] = useState([]);
 
+  useEffect(() => {
+    // Redirect to the login page if the user is not authenticated
+    const jwtoken = localStorage.getItem("jwtoken");
+    if (jwtoken === null || jwtoken === undefined) {
+      navigate("/login");
+    }
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
@@ -19,9 +27,12 @@ function AskAIPage() {
       const userMessage = { sender: "user", text: message };
       setConversation((prev) => [...prev, userMessage]);
 
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/ask-ai`, {
-        message,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/ask-ai`,
+        {
+          message,
+        }
+      );
 
       // Add AI response to conversation
       const aiMessage = { sender: "ai", text: response.data.answer };

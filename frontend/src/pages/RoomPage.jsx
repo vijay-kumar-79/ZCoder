@@ -17,17 +17,25 @@ function RoomPage() {
   const socket = useRef();
 
   useEffect(() => {
+    // Redirect to the login page if the user is not authenticated
+    const jwtoken = localStorage.getItem("jwtoken");
+    if (jwtoken === null || jwtoken === undefined) {
+      navigate("/login");
+    }
+  });
+
+  useEffect(() => {
     socket.current = io("http://localhost:3000");
 
     socket.current.emit("join-room", { roomId, username });
 
     // Add these listeners
     socket.current.on("user-joined", (username) => {
-      setUsers(prev => [...prev, username]);
+      setUsers((prev) => [...prev, username]);
     });
 
     socket.current.on("user-left", (username) => {
-      setUsers(prev => prev.filter(user => user !== username));
+      setUsers((prev) => prev.filter((user) => user !== username));
     });
 
     socket.current.on("room-users", (userList) => {

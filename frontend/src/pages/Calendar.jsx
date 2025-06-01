@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import '../styles/Calendar.css';
+import React, { useState, useEffect, useCallback } from "react";
+import "../styles/Calendar.css";
 
 // Error Boundary Component
 class CalendarErrorBoundary extends React.Component {
@@ -13,7 +13,7 @@ class CalendarErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Calendar Error:', error, errorInfo);
+    console.error("Calendar Error:", error, errorInfo);
   }
 
   render() {
@@ -43,14 +43,14 @@ class CalendarErrorBoundary extends React.Component {
 const useStickyState = (defaultValue, key) => {
   const [value, setValue] = useState(() => {
     try {
-      if (typeof window === 'undefined') return defaultValue;
+      if (typeof window === "undefined") return defaultValue;
 
       const stickyValue = window.localStorage.getItem(key);
       if (stickyValue !== null) {
         const parsed = JSON.parse(stickyValue);
 
         // Special handling for date objects
-        if (key === 'calendar-current-date') {
+        if (key === "calendar-current-date") {
           const date = new Date(parsed);
           return isNaN(date.getTime()) ? defaultValue : date;
         }
@@ -65,7 +65,7 @@ const useStickyState = (defaultValue, key) => {
 
   useEffect(() => {
     try {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.localStorage.setItem(key, JSON.stringify(value));
       }
     } catch (error) {
@@ -87,24 +87,52 @@ const LoadingSpinner = () => (
 // Main Calendar Component
 const Calendar = () => {
   // State management with persistent storage
-  const [currentDate, setCurrentDate] = useStickyState(new Date(), 'calendar-current-date');
-  const [contests, setContests] = useStickyState([], 'calendar-contests');
+  const [currentDate, setCurrentDate] = useStickyState(
+    new Date(),
+    "calendar-current-date"
+  );
+  const [contests, setContests] = useStickyState([], "calendar-contests");
   const [selectedDateContests, setSelectedDateContests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [initialized, setInitialized] = useState(false);
-  const [dataFetched, setDataFetched] = useStickyState(false, 'calendar-data-fetched');
+  const [dataFetched, setDataFetched] = useStickyState(
+    false,
+    "calendar-data-fetched"
+  );
+
+  useEffect(() => {
+    // Redirect to the login page if the user is not authenticated
+    const jwtoken = localStorage.getItem("jwtoken");
+    if (jwtoken === null || jwtoken === undefined) {
+      navigate("/login");
+    }
+  });
 
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
-  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   // Ensure currentDate is always a valid Date object
   useEffect(() => {
-    if (!currentDate || !(currentDate instanceof Date) || isNaN(currentDate.getTime())) {
+    if (
+      !currentDate ||
+      !(currentDate instanceof Date) ||
+      isNaN(currentDate.getTime())
+    ) {
       setCurrentDate(new Date());
     }
     setInitialized(true);
@@ -113,68 +141,75 @@ const Calendar = () => {
   // Individual API fetch functions
   const fetchCodeforcesContests = useCallback(async () => {
     try {
-      const response = await fetch('https://codeforces.com/api/contest.list');
-      if (!response.ok) throw new Error('Codeforces API failed');
+      const response = await fetch("https://codeforces.com/api/contest.list");
+      if (!response.ok) throw new Error("Codeforces API failed");
 
       const data = await response.json();
 
-      if (data.status === 'OK') {
+      if (data.status === "OK") {
         return data.result
-          .filter(contest => contest.phase === 'BEFORE')
+          .filter((contest) => contest.phase === "BEFORE")
           .slice(0, 10)
-          .map(contest => ({
+          .map((contest) => ({
             name: contest.name,
-            site: 'Codeforces',
+            site: "Codeforces",
             start_time: new Date(contest.startTimeSeconds * 1000).toISOString(),
             duration: contest.durationSeconds,
-            url: `https://codeforces.com/contest/${contest.id}`
+            url: `https://codeforces.com/contest/${contest.id}`,
           }));
       }
     } catch (error) {
-      console.error('Codeforces API error:', error);
+      console.error("Codeforces API error:", error);
     }
     return [];
   }, []);
 
   const fetchLeetCodeContests = useCallback(async () => {
     try {
-      const response = await fetch('https://alfa-leetcode-api.onrender.com/contests', {
-        timeout: 5000
-      });
+      const response = await fetch(
+        "https://alfa-leetcode-api.onrender.com/contests",
+        {
+          timeout: 5000,
+        }
+      );
 
-      if (!response.ok) throw new Error('LeetCode API failed');
+      if (!response.ok) throw new Error("LeetCode API failed");
 
       const data = await response.json();
 
-      return data.slice(0, 10).map(contest => ({
+      return data.slice(0, 10).map((contest) => ({
         name: contest.title || contest.name,
-        site: 'LeetCode',
+        site: "LeetCode",
         start_time: new Date(contest.startTime * 1000).toISOString(),
         duration: contest.duration || 7200,
-        url: `https://leetcode.com/contest/${contest.titleSlug || contest.slug}`
+        url: `https://leetcode.com/contest/${
+          contest.titleSlug || contest.slug
+        }`,
       }));
     } catch (error) {
-      console.error('LeetCode API error:', error);
+      console.error("LeetCode API error:", error);
     }
     return [];
   }, []);
 
   const fetchCodeChefContests = useCallback(async () => {
     try {
-      const response = await fetch('https://codechef-api.herokuapp.com/contests/future');
-      if (!response.ok) throw new Error('CodeChef API failed');
+      const response = await fetch(
+        "https://codechef-api.herokuapp.com/contests/future"
+      );
+      if (!response.ok) throw new Error("CodeChef API failed");
 
       const data = await response.json();
 
-      return data.slice(0, 10).map(contest => ({
+      return data.slice(0, 10).map((contest) => ({
         name: contest.name,
-        site: 'CodeChef',
+        site: "CodeChef",
         start_time: contest.start,
         duration: contest.duration || 10800,
-        url: contest.url || 'https://codechef.com'
+        url: contest.url || "https://codechef.com",
       }));
     } catch (error) {
-      console.error('CodeChef API error:', error);
+      console.error("CodeChef API error:", error);
     }
     return [];
   }, []);
@@ -183,11 +218,25 @@ const Calendar = () => {
   const generateSampleContests = useCallback(() => {
     const now = new Date();
     const sampleContests = [];
-    const platforms = ['Codeforces', 'LeetCode', 'AtCoder', 'CodeChef', 'GeeksforGeeks'];
+    const platforms = [
+      "Codeforces",
+      "LeetCode",
+      "AtCoder",
+      "CodeChef",
+      "GeeksforGeeks",
+    ];
 
     for (let monthOffset = 0; monthOffset < 6; monthOffset++) {
-      const currentMonth = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
-      const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+      const currentMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + monthOffset,
+        1
+      );
+      const daysInMonth = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth() + 1,
+        0
+      ).getDate();
 
       const contestsThisMonth = Math.floor(Math.random() * 3) + 4;
 
@@ -198,29 +247,35 @@ const Calendar = () => {
         contestDate.setMinutes(Math.floor(Math.random() * 4) * 15);
 
         if (contestDate >= now) {
-          const platform = platforms[Math.floor(Math.random() * platforms.length)];
-          const contestTypes = ['Round', 'Contest', 'Challenge', 'Cup'];
-          const contestType = contestTypes[Math.floor(Math.random() * contestTypes.length)];
+          const platform =
+            platforms[Math.floor(Math.random() * platforms.length)];
+          const contestTypes = ["Round", "Contest", "Challenge", "Cup"];
+          const contestType =
+            contestTypes[Math.floor(Math.random() * contestTypes.length)];
 
           sampleContests.push({
-            name: `${platform} ${contestType} ${Math.floor(Math.random() * 1000)}`,
+            name: `${platform} ${contestType} ${Math.floor(
+              Math.random() * 1000
+            )}`,
             site: platform,
             start_time: contestDate.toISOString(),
             duration: [3600, 5400, 7200, 10800][Math.floor(Math.random() * 4)],
-            url: `https://${platform.toLowerCase().replace(' ', '')}.com`
+            url: `https://${platform.toLowerCase().replace(" ", "")}.com`,
           });
         }
       }
     }
 
-    return sampleContests.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+    return sampleContests.sort(
+      (a, b) => new Date(a.start_time) - new Date(b.start_time)
+    );
   }, []);
 
   // Fetch contests from all platforms - only once
   const fetchContestsFromAllPlatforms = useCallback(async () => {
     // Don't fetch if data already exists and was fetched before
     if (dataFetched && contests.length > 0) {
-      console.log('Using cached contest data');
+      console.log("Using cached contest data");
       return;
     }
 
@@ -228,38 +283,39 @@ const Calendar = () => {
     setError(null);
 
     try {
-      console.log('Fetching contests from all platforms...');
+      console.log("Fetching contests from all platforms...");
 
       const results = await Promise.allSettled([
         fetchCodeforcesContests(),
         fetchLeetCodeContests(),
-        fetchCodeChefContests()
+        fetchCodeChefContests(),
       ]);
 
       const allContests = results
-        .filter(result => result.status === 'fulfilled')
-        .flatMap(result => result.value)
-        .filter(contest => contest && contest.name);
+        .filter((result) => result.status === "fulfilled")
+        .flatMap((result) => result.value)
+        .filter((contest) => contest && contest.name);
 
       console.log(`Fetched ${allContests.length} contests from APIs`);
 
       if (allContests.length === 0) {
-        console.log('No contests from APIs, using sample data');
+        console.log("No contests from APIs, using sample data");
         const sampleContests = generateSampleContests();
         setContests(sampleContests);
       } else {
         // Mix API data with some sample data for better demo
         const sampleContests = generateSampleContests();
-        const combinedContests = [...allContests, ...sampleContests]
-          .sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+        const combinedContests = [...allContests, ...sampleContests].sort(
+          (a, b) => new Date(a.start_time) - new Date(b.start_time)
+        );
         setContests(combinedContests);
       }
 
       // Mark data as fetched
       setDataFetched(true);
     } catch (error) {
-      console.error('Error fetching contests:', error);
-      setError('Failed to fetch contests. Using sample data.');
+      console.error("Error fetching contests:", error);
+      setError("Failed to fetch contests. Using sample data.");
 
       const sampleContests = generateSampleContests();
       setContests(sampleContests);
@@ -267,7 +323,14 @@ const Calendar = () => {
     } finally {
       setLoading(false);
     }
-  }, [dataFetched, contests.length, fetchCodeforcesContests, fetchLeetCodeContests, fetchCodeChefContests, generateSampleContests]);
+  }, [
+    dataFetched,
+    contests.length,
+    fetchCodeforcesContests,
+    fetchLeetCodeContests,
+    fetchCodeChefContests,
+    generateSampleContests,
+  ]);
 
   // Initial data fetch - only if not already fetched
   useEffect(() => {
@@ -288,55 +351,89 @@ const Calendar = () => {
     return firstDay === 0 ? 6 : firstDay - 1;
   }, []);
 
-  const hasContestOnDate = useCallback((date) => {
-    if (!contests || !Array.isArray(contests)) return false;
+  const hasContestOnDate = useCallback(
+    (date) => {
+      if (!contests || !Array.isArray(contests)) return false;
 
-    const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    return contests.some(contest => {
-      try {
-        const contestDate = new Date(contest.start_time);
-        const contestDateOnly = new Date(contestDate.getFullYear(), contestDate.getMonth(), contestDate.getDate());
-        return targetDate.getTime() === contestDateOnly.getTime();
-      } catch (error) {
-        return false;
-      }
-    });
-  }, [contests]);
+      const targetDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+      );
+      return contests.some((contest) => {
+        try {
+          const contestDate = new Date(contest.start_time);
+          const contestDateOnly = new Date(
+            contestDate.getFullYear(),
+            contestDate.getMonth(),
+            contestDate.getDate()
+          );
+          return targetDate.getTime() === contestDateOnly.getTime();
+        } catch (error) {
+          return false;
+        }
+      });
+    },
+    [contests]
+  );
 
-  const getContestsForDate = useCallback((date) => {
-    if (!contests || !Array.isArray(contests)) return [];
+  const getContestsForDate = useCallback(
+    (date) => {
+      if (!contests || !Array.isArray(contests)) return [];
 
-    const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    return contests.filter(contest => {
-      try {
-        const contestDate = new Date(contest.start_time);
-        const contestDateOnly = new Date(contestDate.getFullYear(), contestDate.getMonth(), contestDate.getDate());
-        return targetDate.getTime() === contestDateOnly.getTime();
-      } catch (error) {
-        return false;
-      }
-    }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-  }, [contests]);
+      const targetDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+      );
+      return contests
+        .filter((contest) => {
+          try {
+            const contestDate = new Date(contest.start_time);
+            const contestDateOnly = new Date(
+              contestDate.getFullYear(),
+              contestDate.getMonth(),
+              contestDate.getDate()
+            );
+            return targetDate.getTime() === contestDateOnly.getTime();
+          } catch (error) {
+            return false;
+          }
+        })
+        .sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+    },
+    [contests]
+  );
 
-  const getContestCountForDate = useCallback((date) => {
-    return getContestsForDate(date).length;
-  }, [getContestsForDate]);
+  const getContestCountForDate = useCallback(
+    (date) => {
+      return getContestsForDate(date).length;
+    },
+    [getContestsForDate]
+  );
 
   // Event handlers
-  const handleDateClick = useCallback((day) => {
-    try {
-      const clickedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-      const contestsForDate = getContestsForDate(clickedDate);
-      setSelectedDateContests(contestsForDate);
-    } catch (error) {
-      console.error('Error handling date click:', error);
-      setSelectedDateContests([]);
-    }
-  }, [currentDate, getContestsForDate]);
+  const handleDateClick = useCallback(
+    (day) => {
+      try {
+        const clickedDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          day
+        );
+        const contestsForDate = getContestsForDate(clickedDate);
+        setSelectedDateContests(contestsForDate);
+      } catch (error) {
+        console.error("Error handling date click:", error);
+        setSelectedDateContests([]);
+      }
+    },
+    [currentDate, getContestsForDate]
+  );
 
   // Navigation functions with proper state updates
   const navigateMonth = useCallback((direction) => {
-    setCurrentDate(prevDate => {
+    setCurrentDate((prevDate) => {
       try {
         const newDate = new Date(prevDate);
         const newMonth = newDate.getMonth() + direction;
@@ -349,7 +446,7 @@ const Calendar = () => {
           return new Date(newDate.getFullYear(), newMonth, 1);
         }
       } catch (error) {
-        console.error('Error navigating month:', error);
+        console.error("Error navigating month:", error);
         return new Date();
       }
     });
@@ -357,12 +454,16 @@ const Calendar = () => {
   }, []);
 
   const navigateYear = useCallback((direction) => {
-    setCurrentDate(prevDate => {
+    setCurrentDate((prevDate) => {
       try {
         const newDate = new Date(prevDate);
-        return new Date(newDate.getFullYear() + direction, newDate.getMonth(), 1);
+        return new Date(
+          newDate.getFullYear() + direction,
+          newDate.getMonth(),
+          1
+        );
       } catch (error) {
-        console.error('Error navigating year:', error);
+        console.error("Error navigating year:", error);
         return new Date();
       }
     });
@@ -381,21 +482,23 @@ const Calendar = () => {
 
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
-      days.push(
-        <div key={`empty-${i}`} className="calendar-day empty"></div>
-      );
+      days.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
     }
 
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+      const date = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        day
+      );
       const hasContest = hasContestOnDate(date);
       const contestCount = getContestCountForDate(date);
 
       days.push(
         <div
           key={day}
-          className={`calendar-day ${hasContest ? 'has-contest' : ''}`}
+          className={`calendar-day ${hasContest ? "has-contest" : ""}`}
           onClick={() => handleDateClick(day)}
         >
           <span className="day-number">{day}</span>
@@ -412,7 +515,14 @@ const Calendar = () => {
     }
 
     return days;
-  }, [currentDate, getDaysInMonth, getFirstDayOfMonth, hasContestOnDate, getContestCountForDate, handleDateClick]);
+  }, [
+    currentDate,
+    getDaysInMonth,
+    getFirstDayOfMonth,
+    hasContestOnDate,
+    getContestCountForDate,
+    handleDateClick,
+  ]);
 
   // Don't render until initialized
   if (!initialized) {
@@ -420,7 +530,11 @@ const Calendar = () => {
   }
 
   // Validate currentDate before rendering
-  if (!currentDate || !(currentDate instanceof Date) || isNaN(currentDate.getTime())) {
+  if (
+    !currentDate ||
+    !(currentDate instanceof Date) ||
+    isNaN(currentDate.getTime())
+  ) {
     return (
       <div className="error-container">
         <h2>Calendar Error</h2>
@@ -436,7 +550,10 @@ const Calendar = () => {
         <div className="calendar-section">
           <div className="calendar-header">
             <div className="navigation">
-              <button className="nav-button year-nav" onClick={() => navigateYear(-1)}>
+              <button
+                className="nav-button year-nav"
+                onClick={() => navigateYear(-1)}
+              >
                 ‹‹
               </button>
               <button className="nav-button" onClick={() => navigateMonth(-1)}>
@@ -448,7 +565,10 @@ const Calendar = () => {
               <button className="nav-button" onClick={() => navigateMonth(1)}>
                 ›
               </button>
-              <button className="nav-button year-nav" onClick={() => navigateYear(1)}>
+              <button
+                className="nav-button year-nav"
+                onClick={() => navigateYear(1)}
+              >
                 ››
               </button>
             </div>
@@ -456,13 +576,13 @@ const Calendar = () => {
 
           <div className="calendar-grid">
             <div className="days-header">
-              {daysOfWeek.map(day => (
-                <div key={day} className="day-header">{day}</div>
+              {daysOfWeek.map((day) => (
+                <div key={day} className="day-header">
+                  {day}
+                </div>
               ))}
             </div>
-            <div className="days-grid">
-              {renderCalendarDays()}
-            </div>
+            <div className="days-grid">{renderCalendarDays()}</div>
           </div>
         </div>
 
@@ -481,21 +601,28 @@ const Calendar = () => {
             <div className="contests-list">
               {selectedDateContests.length > 0 ? (
                 selectedDateContests.map((contest, index) => (
-                  <div key={`${contest.site}-${index}`} className="contest-item">
+                  <div
+                    key={`${contest.site}-${index}`}
+                    className="contest-item"
+                  >
                     <h4>
-                      <span className={`platform-badge platform-${contest.site.toLowerCase()}`}>
+                      <span
+                        className={`platform-badge platform-${contest.site.toLowerCase()}`}
+                      >
                         {contest.site}
                       </span>
                       {contest.name}
                     </h4>
                     <p>
-                      <span className="label">Start Time:</span>{' '}
+                      <span className="label">Start Time:</span>{" "}
                       {new Date(contest.start_time).toLocaleString()}
                     </p>
                     <p>
-                      <span className="label">Duration:</span>{' '}
-                      {typeof contest.duration === 'number'
-                        ? `${Math.floor(contest.duration / 3600)}h ${Math.floor((contest.duration % 3600) / 60)}m`
+                      <span className="label">Duration:</span>{" "}
+                      {typeof contest.duration === "number"
+                        ? `${Math.floor(contest.duration / 3600)}h ${Math.floor(
+                            (contest.duration % 3600) / 60
+                          )}m`
                         : contest.duration}
                     </p>
                     {contest.url && (
@@ -512,7 +639,7 @@ const Calendar = () => {
                 ))
               ) : (
                 <div className="no-contests">
-                  {loading ? 'Loading...' : 'Click on a date to see contests'}
+                  {loading ? "Loading..." : "Click on a date to see contests"}
                 </div>
               )}
             </div>
