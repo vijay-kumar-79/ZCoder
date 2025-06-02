@@ -1,31 +1,73 @@
-// CodeEditor.js
-import React, { useState } from "react";
-import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
-import "prismjs/themes/prism.css"; // Light theme
+import React, { useState, useEffect } from "react";
+import Editor from "@monaco-editor/react";
+import axios from "axios";
+import { LANGUAGE_VERSIONS, CODE_SNIPPETS } from "./constants";
+import LanguageSelector from "./LanguageSelector";
+import "./CodeEditor.css";
 
-export default function CodeEditor({value, onChange}) {
-  // const [code, setCode] = useState('you can write your code here');
+export default function CodeEditor({
+  value,
+  onChange,
+  inputValue,
+  onInputChange,
+}) {
+  const [language, setLanguage] = useState("cpp");
+  const [output, setOutput] = useState("");
+
+  useEffect(() => {
+    // Only set the snippet if the editor is empty
+    if (!value || value.trim() === "") {
+      onChange(CODE_SNIPPETS[language]);
+    }
+    // eslint-disable-next-line
+  }, [language]);
+
+  const runCode = async () => {
+    setOutput("Running...");
+    try {
+      const response = await axios.post(import.meta.env.VITE_JUDGE, {
+        language,
+        version: LANGUAGE_VERSIONS[language],
+        files: [{ content: value }],
+        stdin: inputValue,
+      });
+
+      const { run } = response.data;
+      setOutput(run.output);
+    } catch (err) {
+      setOutput("Error running code");
+      console.error(err);
+    }
+  };
 
   return (
-    <div className="bg-gray-100 p-4 rounded-lg shadow h-full overflow-auto">
-      <div className="text-lg font-semibold mb-2 text-gray-800">Code Editor</div>
+    <div className="editor-container">
+      <h1 className="editor-heading">Online IDE</h1>
+
+      <LanguageSelector language={language} setLanguage={setLanguage} />
+
       <Editor
+        height="300px"
+        language={language === "cpp" ? "cpp" : language}
+        theme="vs-dark"
         value={value}
-        onValueChange={onChange}
-        highlight={(code) => highlight(code, languages.javascript)}
-        padding={12}
-        style={{
-          fontFamily: '"Fira code", "Fira Mono", monospace',
-          fontSize: 14,
-          backgroundColor: "#f3f4f6",
-          minHeight: "400px",
-          whiteSpace: "pre-wrap",
-          outline: "none",
-        }}
+        onChange={onChange}
       />
+
+      <textarea
+        className="input-box"
+        rows="4"
+        placeholder="Enter input here..."
+        value={inputValue}
+        onChange={(e) => onInputChange(e.target.value)}
+      />
+
+      <button onClick={runCode} className="run-button">
+        Run Code
+      </button>
+
+      <h2 className="output-heading">Output:</h2>
+      <pre className="output-box">{output}</pre>
     </div>
   );
 }

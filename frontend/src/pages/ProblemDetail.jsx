@@ -12,6 +12,7 @@ const ProblemDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [code, setCode] = useState("");
+  const [input, setInput] = useState(""); // Add this line
   const [submissionResult, setSubmissionResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const backend = import.meta.env.VITE_BACKEND_URL;
@@ -140,7 +141,12 @@ const ProblemDetail = () => {
 
         {/* Right Panel - Code Editor */}
         <div className="panel">
-          <CodeEditor value={code} onChange={handleCodeChange} />
+          <CodeEditor
+            value={code}
+            onChange={setCode}
+            inputValue={input} // Pass input value
+            onInputChange={setInput} // Pass input change handler
+          />
           <div className="action-buttons">
             <button
               onClick={handleSubmit}

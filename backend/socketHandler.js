@@ -18,6 +18,7 @@ function socketHandler(io) {
         rooms.set(roomId, {
           users: new Set(),
           sharedText: "",
+          sharedInput: "", // Add this line
         });
       }
       rooms.get(roomId).users.add(username);
@@ -31,6 +32,7 @@ function socketHandler(io) {
         socket.emit("room-init", {
           users: Array.from(rooms.get(roomId).users),
           sharedText: rooms.get(roomId).sharedText,
+          sharedInput: rooms.get(roomId).sharedInput, // Add this line
           previousMessages,
         });
       } catch (err) {
@@ -61,6 +63,14 @@ function socketHandler(io) {
         rooms.get(roomId).sharedText = text;
       }
       socket.to(roomId).emit("text-edit", text);
+    });
+
+    // Add this block for input sync
+    socket.on("input-edit", ({ roomId, input }) => {
+      if (rooms.has(roomId)) {
+        rooms.get(roomId).sharedInput = input;
+      }
+      socket.to(roomId).emit("input-edit", input);
     });
 
     socket.on("disconnect", () => {
