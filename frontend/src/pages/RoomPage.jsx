@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import "../styles/rooms.css";
 import io from "socket.io-client";
+import CodeEditor from "../components/CodeEditor";
 
 function RoomPage() {
   const location = useLocation();
@@ -12,6 +13,7 @@ function RoomPage() {
   const [users, setUsers] = useState([]);
   const [chatMode, setChatMode] = useState(true);
   const [sharedText, setSharedText] = useState("");
+  const [sharedInput, setSharedInput] = useState("");
   const textAreaRef = useRef(null);
   const messagesEndRef = useRef(null);
   const socket = useRef();
@@ -48,9 +50,10 @@ function RoomPage() {
 
     socket.current.on(
       "room-init",
-      ({ users, sharedText, previousMessages }) => {
+      ({ users, sharedText, sharedInput, previousMessages }) => {
         setUsers(users);
         setSharedText(sharedText);
+        setSharedInput(sharedInput || "");
         if (previousMessages) {
           setMessages(previousMessages);
         }
@@ -60,6 +63,12 @@ function RoomPage() {
     socket.current.on("text-edit", (text) => {
       if (text !== sharedText) {
         setSharedText(text);
+      }
+    });
+
+    socket.current.on("input-edit", (input) => {
+      if (input !== sharedInput) {
+        setSharedInput(input);
       }
     });
 
@@ -80,8 +89,7 @@ function RoomPage() {
     }
   };
 
-  const handleTextChange = (e) => {
-    const newText = e.target.value;
+  const handleTextChange = (newText) => {
     setSharedText(newText);
     socket.current.emit("text-edit", {
       roomId,
@@ -162,13 +170,19 @@ function RoomPage() {
               <h3>Collaborative Editor</h3>
               <hr />
             </div>
-            <textarea
-              ref={textAreaRef}
+            <CodeEditor
               value={sharedText}
-              spellCheck="false"
               onChange={handleTextChange}
-              placeholder="Start typing here... Changes appear for everyone in real-time!"
-              className="shared-textarea"
+              inputValue={sharedInput}
+              onInputChange={(newInput) => {
+                setSharedInput(newInput);
+                socket.current.emit("input-edit", {
+                  roomId,
+                  input: newInput,
+                });
+              }}
+              height="70vh"
+              width="100%"
             />
           </div>
         )}
