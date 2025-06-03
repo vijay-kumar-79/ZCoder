@@ -15,7 +15,7 @@ const auth = async (req, res, next) => {
         
         // Attach user to request
         req.user = decoded;
-        // console.log(decoded);
+        // console.log(1, decoded);
         
         next();
     } catch (err) {

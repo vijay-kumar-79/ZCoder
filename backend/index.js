@@ -10,6 +10,7 @@ const connectDB = require("./config/db");
 const aiRoute = require("./routes/AskAI.js");
 const loginRoute = require("./routes/LoginRoute.js");
 const solutionsRoute = require("./routes/Solutions.js");
+const profileRoute = require("./routes/Profile.js");
 const socketHandler = require("./socketHandler");
 require("dotenv").config();
 
@@ -39,6 +40,7 @@ app.use(express.json());
 app.use("/api", aiRoute);
 app.use("/", loginRoute);
 app.use("/api/solutions", solutionsRoute);
+app.use("/user", profileRoute);
 app.get("/ping", (req, res) => {
   console.log(process.env.GROQ_API_KEY);
   res.json({ msg: "API is working !!" });
