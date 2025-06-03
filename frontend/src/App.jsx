@@ -12,6 +12,8 @@ import ProblemDetail from "./pages/ProblemDetail";
 import Discussions from "./pages/Discussion";
 import SolutionDetail from "./pages/SolutionDetail";
 import Header from "./components/Header";
+import UserProfile from './pages/UserProfile';
+import FriendsProfile from "./pages/FriendsProfile";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path="/problem/:titleSlug" element={<ProblemDetail />} />
         <Route path="/discussions/:titleSlug" element={<Discussions />} />
         <Route path="/solution/:id" element={<SolutionDetail />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/user?" element={<FriendsProfile />} />
       </Routes>
     </BrowserRouter>
   );

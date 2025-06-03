@@ -22,6 +22,7 @@ function Header() {
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
+    // console.log("loged out..")
   };
 
   return (
@@ -43,6 +44,9 @@ function Header() {
           </li>
           <li>
             <NavLink to="/askAi">Ask AI </NavLink>
+          </li>
+          <li>
+            <NavLink to="/profile">Profile </NavLink>
           </li>
           <li className="logout-btn">
             <NavLink onClick={handleLogout}>Logout </NavLink>
