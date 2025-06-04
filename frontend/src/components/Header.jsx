@@ -1,55 +1,50 @@
-import axios from "axios";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Header.css";
-import Logo from '../assets/logo.png'
+import Logo from '../assets/logo.png';
 
 function Header() {
   const navigate = useNavigate();
-  // const userId = localStorage.getItem("userId")
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // async function handleClick() {
-  //     try {
-  //         await axios.post(`https://z-coder.vercel.app/logout`, {}, { withCredentials: true });
-  //         localStorage.removeItem("token");
-  //         localStorage.removeItem("userId");
-  //         navigate("/");
-  //     } catch (error) {
-  //         console.log(error);
-  //         console.log("error while logging out");
-  //     }
-  // }
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
-    // console.log("loged out..")
+  };
+
+  const handleHamburgerClick = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
+  // Optional: close menu after clicking a link (especially on mobile)
+  const handleLinkClick = () => {
+    setMenuOpen(false);
   };
 
   return (
     <header className="navbar">
       <nav>
         <img src={Logo} alt="Logo" className="nav-logo" />
-        <ul className="nav-links">
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard">Dashboard</NavLink>
-          </li>
-          <li>
-            <NavLink to="/rooms">Rooms</NavLink>
-          </li>
-          <li>
-            <NavLink to="/calendar">Calender</NavLink>
-          </li>
-          <li>
-            <NavLink to="/askAi">Ask AI </NavLink>
-          </li>
-          <li>
-            <NavLink to="/profile">Profile </NavLink>
-          </li>
+        <button
+          className={`hamburger${menuOpen ? " active" : ""}`}
+          aria-label="Toggle navigation menu"
+          aria-expanded={menuOpen}
+          onClick={handleHamburgerClick}
+          type="button"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul className={`nav-links${menuOpen ? " show" : ""}`}>
+          <li><NavLink to="/" onClick={handleLinkClick}>Home</NavLink></li>
+          <li><NavLink to="/dashboard" onClick={handleLinkClick}>Dashboard</NavLink></li>
+          <li><NavLink to="/rooms" onClick={handleLinkClick}>Rooms</NavLink></li>
+          <li><NavLink to="/calendar" onClick={handleLinkClick}>Calender</NavLink></li>
+          <li><NavLink to="/askAi" onClick={handleLinkClick}>Ask AI</NavLink></li>
+          <li><NavLink to="/profile" onClick={handleLinkClick}>Profile</NavLink></li>
           <li className="logout-btn">
-            <NavLink onClick={handleLogout}>Logout </NavLink>
+            <NavLink to="#" onClick={() => { handleLogout(); handleLinkClick(); }}>Logout</NavLink>
           </li>
         </ul>
       </nav>
