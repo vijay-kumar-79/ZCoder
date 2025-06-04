@@ -2,16 +2,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 90vh;
     padding: 20px;
-    background: #0a0a0a;
+    background: #1A1B26;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .calendar-wrapper {
-    background: #1a1a1a;
+    background: #252737;
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 90vw;
     max-width: 1200px;
@@ -45,7 +45,7 @@
 }
 
 .nav-button {
-    background: #333;
+    background: #1A1B26;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -61,17 +61,17 @@
 }
 
 .nav-button:hover {
-    background: #444;
+    background: #252737;
     border-color: #555;
 }
 
 .nav-button.year-nav {
-    background: #2a2a2a;
+    background: #1A1B26;
     border-color: #3a3a3a;
 }
 
 .nav-button.year-nav:hover {
-    background: #3a3a3a;
+    background: #252737;
     border-color: #4a4a4a;
 }
 
@@ -97,7 +97,7 @@
 .days-header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    background: #2a2a2a;
+    background: #1A1B26;
     flex-shrink: 0;
 }
 
@@ -120,7 +120,7 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(6, 1fr);
-    background: #1a1a1a;
+    background: #1A1B26;
     flex: 1;
 }
 
@@ -136,7 +136,7 @@
     transition: all 0.2s ease;
     position: relative;
     color: #fff;
-    background: #1a1a1a;
+    background: #1A1B26;
     flex-direction: column;
     gap: 2px;
 }
@@ -146,30 +146,30 @@
 }
 
 .calendar-day:hover {
-    background: #2a2a2a;
+    background: #1A1B26;
     color: #fff;
 }
 
 .calendar-day.empty {
     cursor: default;
-    background: #111;
+    background: #252737;
     color: #555;
 }
 
 .calendar-day.empty:hover {
-    background: #111;
+    background: #252737;
 }
 
 /* Single color for all contests - removed platform-specific colors */
 .calendar-day.has-contest {
-    background: #0066cc;
+    background: #00D4FF;
     color: #ffffff;
     font-weight: 600;
     position: relative;
 }
 
 .calendar-day.has-contest:hover {
-    background: #0052a3;
+    background: #00A8D4;
 }
 
 .day-number {
@@ -213,7 +213,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #2a2a2a;
+    background: #1A1B26;
     border-radius: 8px;
     border: 1px solid #333;
     padding: 15px;
@@ -233,7 +233,7 @@
     font-size: 16px;
     font-weight: 600;
     text-align: center;
-    border-bottom: 2px solid #0066cc;
+    border-bottom: 2px solid #00D4FF;
     padding-bottom: 8px;
     flex-shrink: 0;
 }
@@ -248,7 +248,7 @@
 }
 
 .contest-item {
-    background: #1a1a1a;
+    background: #1A1B26;
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #333;
@@ -257,12 +257,12 @@
 }
 
 .contest-item:hover {
-    border-color: #0066cc;
-    background: #222;
+    border-color: #00A8D4;
+    background: #252737;
 }
 
 .contest-item h4 {
-    color: #0066cc;
+    color: #00D4FF;
     margin-bottom: 10px;
     font-size: 14px;
     font-weight: 600;
@@ -286,7 +286,7 @@
 
 /* Single color for all platform badges */
 .platform-badge {
-    background: #0066cc;
+    background: #00D4FF;
     color: white;
     padding: 2px 6px;
     border-radius: 4px;
@@ -300,19 +300,19 @@
     display: inline-block;
     margin-top: 10px;
     padding: 6px 12px;
-    background: #0066cc;
+    background: #00D4FF;
     color: white;
     text-decoration: none;
     border-radius: 4px;
     font-size: 11px;
     font-weight: 500;
     transition: all 0.3s ease;
-    border: 1px solid #0066cc;
+    border: 1px solid #00D4FF;
 }
 
 .contest-link:hover {
-    background: #0052a3;
-    border-color: #0052a3;
+    background: #00A8D4;
+    border-color: #00A8D4;
 }
 
 .no-contests {
@@ -335,7 +335,7 @@
 .loading-spinner {
     font-size: 20px;
     margin-bottom: 15px;
-    color: #0066cc;
+    color: #00D4FF;
 }
 
 .error-message {
@@ -355,17 +355,17 @@
 }
 
 .contests-list::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: #1A1B26;
     border-radius: 3px;
 }
 
 .contests-list::-webkit-scrollbar-thumb {
-    background: #0066cc;
+    background: #00D4FF;
     border-radius: 3px;
 }
 
 .contests-list::-webkit-scrollbar-thumb:hover {
-    background: #0052a3;
+    background: #00A8D4;
 }
 
 /* Responsive Design */
