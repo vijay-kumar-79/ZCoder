@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 
 .editor-container {
-  padding: 20px;
+  padding: 0 20px;
   max-width: 900px;
   margin: 0 auto;
   font-family: Arial, sans-serif;
@@ -15,6 +15,8 @@
 
 .input-box {
   width: 100%;
+  min-height: 55px;
+  max-height: 75px;
   margin-top: 10px;
   padding: 10px;
   font-size: 14px;
@@ -45,8 +47,12 @@
 
 .output-box {
   background-color: #f4f4f4;
+  color: black;
+  min-height: 55px;
+  max-height: 80px;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
   white-space: pre-wrap;
+  overflow-y: scroll;
 }
