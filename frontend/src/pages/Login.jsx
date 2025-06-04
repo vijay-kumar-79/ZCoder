@@ -1,4 +1,4 @@
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-bg.png";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../styles/Login.css";
@@ -18,15 +18,13 @@ function LoginPage() {
     form.reset();
     setHide(true);
     try {
-      console.log("Submitting login request with data:", data);
-      const response = await fetch("http://localhost:3000/login/", {
+      const response = await fetch(`http://localhost:3000/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-      console.log("Response status:", response);
       const result = await response.json(); // Parse JSON response
 
       if (response.ok) {
@@ -44,11 +42,11 @@ function LoginPage() {
 
   return (
     <div className="App">
-      <div className="login-container">
+      <div className="register-container">
         <div>
           <img src={logo} alt="Sholarseek Logo" className="logo" />
         </div>
-        <form id="login-form" onSubmit={formSubmitted}>
+        <form id="login-form" onSubmit={formSubmitted} >
           <div className="form-group">
             <label htmlFor="username" className="form-label">
               USERNAME
@@ -59,6 +57,7 @@ function LoginPage() {
               id="username"
               name="username"
               placeholder="Username"
+              
               required
             />
           </div>
@@ -68,17 +67,14 @@ function LoginPage() {
             </label>
             <input
               type={hide ? "password" : "text"}
-              id="passweord"
+              id="password"
               className="form-input"
               name="password"
               placeholder="Password"
-              onChange={(e) => {
-                e.preventDefault();
-              }}
               required
             />
           </div>
-          <div className="checkbox-container">
+          <div className="checkbox-container" >
             <input
               type="checkbox"
               className="checkbox"
