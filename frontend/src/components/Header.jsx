@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Header.css";
-import Logo from '../assets/logo-bg.png';
+import Logo from '../assets/logo-noBg.png';
 
 function Header() {
   const navigate = useNavigate();
