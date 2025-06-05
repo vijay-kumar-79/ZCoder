@@ -10,20 +10,6 @@
   --highlight: #4B5EAA;
 }
 
-*::-webkit-scrollbar {
-  width: 6px;
-  background: var(--secondary-background);
-}
-
-*::-webkit-scrollbar-thumb {
-  background: var(--primary-accent);
-  border-radius: 8px;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary-accent);
-}
-
 /* Base Styles */
 .room-page, .room-container {
   height: 90vh;
