@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import axios from "axios";
 import { LANGUAGE_VERSIONS, CODE_SNIPPETS } from "./constants";
@@ -13,11 +13,13 @@ export default function CodeEditor({
 }) {
   const [language, setLanguage] = useState("cpp");
   const [output, setOutput] = useState("");
+  const didMount = useRef(false);
 
   useEffect(() => {
-    // Only set the snippet if the editor is empty
-    if (!value || value.trim() === "") {
+    if (didMount.current) {
       onChange(CODE_SNIPPETS[language]);
+    } else {
+      didMount.current = true;
     }
     // eslint-disable-next-line
   }, [language]);

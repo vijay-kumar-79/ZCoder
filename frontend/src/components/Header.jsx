@@ -42,6 +42,7 @@ function Header() {
           <li><NavLink to="/rooms" onClick={handleLinkClick}>Rooms</NavLink></li>
           <li><NavLink to="/calendar" onClick={handleLinkClick}>Calender</NavLink></li>
           <li><NavLink to="/askAi" onClick={handleLinkClick}>Ask AI</NavLink></li>
+          <li><NavLink to="/bookmarks" onClick={handleLinkClick}>Bookmarks</NavLink></li>
           <li><NavLink to="/profile" onClick={handleLinkClick}>Profile</NavLink></li>
           <li className="logout-btn">
             <NavLink to="#" onClick={() => { handleLogout(); handleLinkClick(); }}>Logout</NavLink>

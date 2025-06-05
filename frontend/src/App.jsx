@@ -14,6 +14,7 @@ import SolutionDetail from "./pages/SolutionDetail";
 import Header from "./components/Header";
 import UserProfile from './pages/UserProfile';
 import FriendsProfile from "./pages/FriendsProfile";
+import Bookmarks from "./pages/Bookmarks";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/solution/:id" element={<SolutionDetail />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/user?" element={<FriendsProfile />} />
+        <Route path="/bookmarks" element={<Bookmarks/>} />
       </Routes>
     </BrowserRouter>
   );
