@@ -94,6 +94,7 @@
 
 .solution-code {
   background-color: #f5f5f5;
+  color: black;
   padding: 1rem;
   border-radius: 4px;
   overflow-x: auto;
@@ -228,4 +229,41 @@
   padding: 20px;
   border-radius: 4px;
   overflow-x: auto;
+}
+
+/* Delete button styling */
+.delete-btn {
+  background: #ff4444;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background 0.2s;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
+}
+
+/* Solution actions container */
+.solution-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* In solution cards */
+.solution-card .delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 68, 68, 0.8);
+  padding: 2px 5px;
+  font-size: 14px;
+}
+
+.solution-card .delete-btn:hover {
+  background: rgba(204, 0, 0, 0.8);
 }
