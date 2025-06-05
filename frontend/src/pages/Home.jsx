@@ -17,6 +17,7 @@ function Home() {
     }
   }, [navigate]);
 
+  const backend = import.meta.env.VITE_BACKEND_URL;
   const searched = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -24,7 +25,7 @@ function Home() {
     if (query.length > 2) {
       const searchTimer = setTimeout(async () => {
         try {
-          const response = await fetch(`http://localhost:3000/users/${query}`);
+          const response = await fetch(`${backend}/users/${query}`);
           const data = await response.json();
           setUsers(data);
         } catch (error) {

@@ -28,12 +28,13 @@ const FriendsProfile = () => {
       navigate("/login");
     }
   });
+  const backend = import.meta.env.VITE_BACKEND_URL;
 
   // Fetch user data (replace with your actual API call)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/user/${userId}`,
+        const res = await fetch(`${backend}/user/${userId}`,
           {
             method: 'GET',
             headers: {

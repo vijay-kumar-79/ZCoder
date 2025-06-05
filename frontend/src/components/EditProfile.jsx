@@ -6,6 +6,7 @@ import axios from "axios";
 const EditProfile = ({ userData, onUpdate, showToast }) => {
   // Local state for editable fields (initialize with current user data)
   const [formData, setFormData] = useState({ ...userData });
+  const backend = import.meta.env.VITE_BACKEND_URL;
   // Local state for password section
   const [passwords, setPasswords] = useState({
     currentPassword: "",
@@ -60,7 +61,7 @@ const EditProfile = ({ userData, onUpdate, showToast }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/user/profile/update", // Correct endpoint
+        `${backend}/user/profile/update`, // Correct endpoint
         formData,
         {
           headers: {
@@ -95,7 +96,7 @@ const EditProfile = ({ userData, onUpdate, showToast }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/user/profile/update-password",
+        `${backend}/user/profile/update-password`,
         {
           currentPassword: passwords.currentPassword,
           newPassword: passwords.newPassword,
