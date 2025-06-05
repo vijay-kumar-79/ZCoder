@@ -1,55 +1,93 @@
 .problem-card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--highlight);
   border-radius: 8px;
-  padding: 12px;
+  padding: 16px;
   margin: 10px 0;
-  background-color: #fff;
+  background-color: var(--secondary-background);
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .problem-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15);
+  transform: translateY(-2px);
+  border-color: var(--primary-accent);
 }
 
 .card-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-weight: bold;
   font-size: 1.1rem;
+  color: var(--text-primary); /* Ensures text is visible */
+  margin-bottom: 8px;
 }
 
 .problem-id {
-  color: #777;
+  color: var(--text-secondary);
 }
 
 .problem-title {
   flex-grow: 1;
+  color: var(--primary-accent); /* Changed from primary-accent to text-primary */
+  font-weight: 600; /* Slightly bolder for better visibility */
 }
 
 .locked-icon {
-  color: #e91e63;
+  color: var(--error);
+  filter: brightness(1.2); /* Makes lock icon more visible */
 }
 
 .card-info {
-  margin-top: 6px;
+  margin-top: 10px;
   font-size: 0.9rem;
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
+  color: var(--text-primary); /* Changed from text-secondary to primary */
+}
+
+.platform {
+  color: var(--secondary-accent);
+  font-weight: 500;
+}
+
+/* Updated difficulty colors to be more vibrant */
+.difficulty[style*="green"] {
+  color: #00ff88 !important; /* Brighter green for Easy */
+}
+.difficulty[style*="orange"] {
+  color: #ffaa00 !important; /* More vibrant orange for Medium */
+}
+.difficulty[style*="red"] {
+  color: #ff5555 !important; /* Brighter red for Hard */
+}
+
+.accuracy {
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .tags {
-  margin-top: 8px;
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .tag {
   display: inline-block;
-  background-color: #f1f1f1;
-  padding: 4px 8px;
+  background-color: var(--primary-background);
+  padding: 4px 12px;
   border-radius: 12px;
-  margin: 2px;
   font-size: 0.8rem;
-  color: #333;
+  color: var(--text-primary);
+  border: 1px solid var(--highlight);
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background-color: var(--highlight);
+  color: white;
 }
