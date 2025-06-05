@@ -36,15 +36,22 @@ body {
   overflow: auto;
 }
 
-/* Custom Scrollbar for .App */
-.App::-webkit-scrollbar {
-  background-color: var(--secondary-background);
-  height: 8px;
-  width: 8px;
+::-webkit-scrollbar {
+  width: 8px;  /* Vertical scrollbar width */
+  height: 8px; /* Horizontal scrollbar height */
 }
 
-.App::-webkit-scrollbar-thumb {
-  background-color: var(--highlight);
-  border-radius: 5px;
-  border: 1px solid var(--secondary-background);
+::-webkit-scrollbar-track {
+  background: var(--secondary-background);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-accent);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--highlight);
 }
