@@ -28,7 +28,7 @@ cd frontend
 npm i
 npm run dev
 ```
-also create a new file called .env in the frontendfolder at the same level of index.js. The format for it is
+also create a new file called .env in the frontend folder at the same level of src,public. The format for it is
 ```
 VITE_API_URL = https://alfa-leetcode-api.onrender.com
 VITE_BACKEND_URL = http://localhost:3000
