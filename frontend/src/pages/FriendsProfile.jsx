@@ -1,10 +1,7 @@
-
-
-// 30-05-2025 6:22 PM 
-
 import React, { useState,useEffect } from 'react';
 import '../styles/UserProfile.css';
 import EditProfile from '../components/EditProfile';
+import { useParams } from 'react-router-dom';
 
 const FriendsProfile = () => {
   const [userData, setUserData] = useState({
@@ -20,7 +17,8 @@ const FriendsProfile = () => {
   const [cfInfo, setCfInfo] = useState(null);
   // Get query parameter from URL (e.g., ?id=123)
   const queryParams = new URLSearchParams(window.location.search);
-  const userId = queryParams.get('id');
+  const {id} = useParams();
+  const userId = id;
 
   // Fetch user data (replace with your actual API call)
   useEffect(() => {
@@ -35,7 +33,6 @@ const FriendsProfile = () => {
           }
         );
         const data = await res.json();
-        console.log(data);
         setUserData(data);
         if (data.codeforcesHandle) {
           fetchCodeforcesInfo(data.codeforcesHandle);
