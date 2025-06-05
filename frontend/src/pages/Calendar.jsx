@@ -89,6 +89,14 @@ const LoadingSpinner = () => (
 const Calendar = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Redirect to the login page if the user is not authenticated
+    const jwtoken = localStorage.getItem("jwtoken");
+    if (jwtoken === null || jwtoken === undefined) {
+      navigate("/login");
+    }
+  });
+
   // State management with persistent storage
   const [currentDate, setCurrentDate] = useStickyState(
     new Date(),
@@ -112,8 +120,18 @@ const Calendar = () => {
   }, [navigate]);
 
   const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -135,16 +153,20 @@ const Calendar = () => {
       if (!response.ok) throw new Error("Codeforces API failed");
 
       const data = await response.json();
-      return data.status === "OK" ? data.result
-        .filter(contest => contest.phase === "BEFORE")
-        .slice(0, 10)
-        .map(contest => ({
-          name: contest.name,
-          site: "Codeforces",
-          start_time: new Date(contest.startTimeSeconds * 1000).toISOString(),
-          duration: contest.durationSeconds,
-          url: `https://codeforces.com/contest/${contest.id}`,
-        })) : [];
+      return data.status === "OK"
+        ? data.result
+            .filter((contest) => contest.phase === "BEFORE")
+            .slice(0, 10)
+            .map((contest) => ({
+              name: contest.name,
+              site: "Codeforces",
+              start_time: new Date(
+                contest.startTimeSeconds * 1000
+              ).toISOString(),
+              duration: contest.durationSeconds,
+              url: `https://codeforces.com/contest/${contest.id}`,
+            }))
+        : [];
     } catch (error) {
       console.error("Codeforces API error:", error);
       return [];
@@ -157,7 +179,7 @@ const Calendar = () => {
       if (!response.ok) throw new Error("LeetCode API failed");
 
       const data = await response.json();
-      return data.contests.map(contest => ({
+      return data.contests.map((contest) => ({
         name: contest.title,
         site: "LeetCode",
         start_time: new Date(contest.start_time * 1000).toISOString(),
@@ -180,13 +202,15 @@ const Calendar = () => {
       if (!response.ok) throw new Error("CodeChef API failed");
 
       const data = await response.json();
-      return Array.isArray(data) ? data.slice(0, 10).map(contest => ({
-        name: contest.name,
-        site: "CodeChef",
-        start_time: contest.start,
-        duration: contest.duration || 10800,
-        url: contest.url || "https://codechef.com",
-      })) : [];
+      return Array.isArray(data)
+        ? data.slice(0, 10).map((contest) => ({
+            name: contest.name,
+            site: "CodeChef",
+            start_time: contest.start,
+            duration: contest.duration || 10800,
+            url: contest.url || "https://codechef.com",
+          }))
+        : [];
     } catch (error) {
       console.error("CodeChef API error:", error);
       return [];
@@ -197,7 +221,11 @@ const Calendar = () => {
     const now = new Date();
     const sampleContests = [];
     const platforms = [
-      "Codeforces", "LeetCode", "AtCoder", "CodeChef", "GeeksforGeeks"
+      "Codeforces",
+      "LeetCode",
+      "AtCoder",
+      "CodeChef",
+      "GeeksforGeeks",
     ];
 
     for (let monthOffset = 0; monthOffset < 6; monthOffset++) {
@@ -221,12 +249,16 @@ const Calendar = () => {
         contestDate.setMinutes(Math.floor(Math.random() * 4) * 15);
 
         if (contestDate >= now) {
-          const platform = platforms[Math.floor(Math.random() * platforms.length)];
+          const platform =
+            platforms[Math.floor(Math.random() * platforms.length)];
           const contestTypes = ["Round", "Contest", "Challenge", "Cup"];
-          const contestType = contestTypes[Math.floor(Math.random() * contestTypes.length)];
+          const contestType =
+            contestTypes[Math.floor(Math.random() * contestTypes.length)];
 
           sampleContests.push({
-            name: `${platform} ${contestType} ${Math.floor(Math.random() * 1000)}`,
+            name: `${platform} ${contestType} ${Math.floor(
+              Math.random() * 1000
+            )}`,
             site: platform,
             start_time: contestDate.toISOString(),
             duration: [3600, 5400, 7200, 10800][Math.floor(Math.random() * 4)],
@@ -260,9 +292,9 @@ const Calendar = () => {
       ]);
 
       const allContests = results
-        .filter(result => result.status === "fulfilled")
-        .flatMap(result => result.value)
-        .filter(contest => contest && contest.name);
+        .filter((result) => result.status === "fulfilled")
+        .flatMap((result) => result.value)
+        .filter((contest) => contest && contest.name);
 
       console.log(`Fetched ${allContests.length} contests from APIs`);
 
@@ -289,7 +321,16 @@ const Calendar = () => {
     } finally {
       setLoading(false);
     }
-  }, [dataFetched, contests.length, fetchCodeforcesContests, fetchLeetCodeContests, fetchCodeChefContests, generateSampleContests, setContests, setDataFetched]);
+  }, [
+    dataFetched,
+    contests.length,
+    fetchCodeforcesContests,
+    fetchLeetCodeContests,
+    fetchCodeChefContests,
+    generateSampleContests,
+    setContests,
+    setDataFetched,
+  ]);
 
   useEffect(() => {
     if (initialized && !dataFetched) {
@@ -571,8 +612,8 @@ const Calendar = () => {
                       <span className="label">Duration:</span>{" "}
                       {typeof contest.duration === "number"
                         ? `${Math.floor(contest.duration / 3600)}h ${Math.floor(
-                          (contest.duration % 3600) / 60
-                        )}m`
+                            (contest.duration % 3600) / 60
+                          )}m`
                         : contest.duration}
                     </p>
                     {contest.url && (

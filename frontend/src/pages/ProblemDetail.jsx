@@ -15,6 +15,7 @@ const ProblemDetail = () => {
   const [input, setInput] = useState(""); // Add this line
   const [submissionResult, setSubmissionResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [language, setLanguage] = useState("cpp"); // Add language state
   const backend = import.meta.env.VITE_BACKEND_URL;
   const LEETCODE_API = `https://leetcode-api-mu.vercel.app/select?titleSlug=${titleSlug}`;
 
@@ -144,8 +145,10 @@ const ProblemDetail = () => {
           <CodeEditor
             value={code}
             onChange={setCode}
-            inputValue={input} // Pass input value
-            onInputChange={setInput} // Pass input change handler
+            inputValue={input}
+            onInputChange={setInput}
+            language={language}
+            onLanguageChange={setLanguage}
           />
           <div className="action-buttons">
             <button
