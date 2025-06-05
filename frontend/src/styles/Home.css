@@ -10,10 +10,6 @@
   --highlight: #4B5EAA;
 }
 
-*{
-    overflow-x: hidden;
-}
-
 /* Base Styles */
 .home-page {
   min-height: 100vh;
