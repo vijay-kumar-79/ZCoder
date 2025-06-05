@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
 const User = require("../models/UserModel");
+const auth = require("../middleware/auth");
 
 router.post("/register/", async (request, response) => {
   const { username, password, email } = request.body;
@@ -53,6 +54,16 @@ router.post("/login/", async (req, res) => {
     return res.json({ token: jwtoken }); // Return as JSON
   } else {
     return res.status(400).json({ error: "Invalid password" }); // Return JSON response
+  }
+});
+
+router.get('/api/auth/me', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.user_id).select('-HashedPassword');
+    // console.log(req.user.user_id);
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
