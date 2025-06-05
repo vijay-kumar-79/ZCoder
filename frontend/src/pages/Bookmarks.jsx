@@ -79,25 +79,41 @@ const STATIC_TAGS = [
   "Biconnected Component",
 ];
 
-function Dashboard() {
+function Bookmarks() {
   const navigate = useNavigate();
   const [problems, setProblems] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]); // for tags
+  const [bookmarks, setBookmarks] = useState([]);
   const [filterMode, setFilterMode] = useState("OR"); // as toggles btw STATE
+  
   useEffect(() => {
-    async function fetchProblems() {
+    // Fetch bookmarks from the backend
+    async function fetchBookmarks() {
       try {
-        const response = await axios.get(
+        const response = await fetch("http://localhost:3000/bookmarks", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("jwtoken")}`,
+            },
+            }
+        );
+        const data = await response.json();
+        const bookmarks = data.bookmarks;
+        const resp = await axios.get(
           `https://leetcode-api-mu.vercel.app/problems?limit=100`
         );
-        setProblems(response.data.problemsetQuestionList);
+        const allProblems = resp.data.problemsetQuestionList;
+        const bookmarkedProblems = allProblems.filter(problem =>
+            bookmarks.includes(problem.titleSlug)
+        );
+        setProblems(bookmarkedProblems);
       } catch (error) {
-        console.error("Error fetching problems:", error);
+        console.error("Error fetching bookmarks:", error);
       }
     }
-
-    fetchProblems();
-  }, []);
+    fetchBookmarks();
+    }, []);
 
   useEffect(() => {
     // Redirect to the login page if the user is not authenticated
@@ -175,6 +191,11 @@ function Dashboard() {
                   locked={problem.isPaidOnly}
                   onClick={() => handleCardClick(problem.titleSlug)}
                   titleSlug={problem.titleSlug}
+                  onBookmarkToggle={(slug) => {
+                          setProblems((prev) => prev.filter((p) => p.titleSlug !== slug));
+                          //Only display the filtered ones
+                          //this reduces the api calls and increases the user experience by quickly giving o/p.
+                        }}
                 />
               </li>
             ))}
@@ -189,4 +210,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Bookmarks;

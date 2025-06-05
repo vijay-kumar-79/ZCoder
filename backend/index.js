@@ -12,6 +12,7 @@ const loginRoute = require("./routes/LoginRoute.js");
 const solutionsRoute = require("./routes/Solutions.js");
 const profileRoute = require("./routes/Profile.js");
 const socketHandler = require("./socketHandler");
+const bookmarksRoute=require("./routes/Bookmarks.js");
 require("dotenv").config();
 
 // Connect to MongoDB
@@ -41,6 +42,7 @@ app.use("/api", aiRoute);
 app.use("/", loginRoute);
 app.use("/api/solutions", solutionsRoute);
 app.use("/user", profileRoute);
+app.use("/bookmarks", bookmarksRoute);
 app.get("/ping", (req, res) => {
   console.log(process.env.GROQ_API_KEY);
   res.json({ msg: "API is working !!" });

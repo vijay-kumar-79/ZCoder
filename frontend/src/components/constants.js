@@ -8,7 +8,7 @@ export const LANGUAGE_VERSIONS = {
 export const CODE_SNIPPETS = {
   python: `print("Hello, Python!")`,
   javascript: `console.log("Hello, JavaScript!");`,
-  cpp: `#include <iostream>
+  cpp: `#include <bits/stdc++.h>
 using namespace std;
 
 int main() {

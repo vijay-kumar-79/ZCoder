@@ -1,5 +1,8 @@
-import React from "react";
-import "./ProblemCard.css"; // Optional: Add styles as needed
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./ProblemCard.css";
+import { CiBookmark } from "react-icons/ci";
+import { FaBookmark } from "react-icons/fa";
 
 const ProblemCard = ({
   id,
@@ -10,7 +13,41 @@ const ProblemCard = ({
   locked,
   tags,
   onClick,
+  titleSlug,
+  onBookmarkToggle
 }) => {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  useEffect(() => {
+    const checkBookmark = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/bookmarks", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("jwtoken")}` },
+        });
+        setIsBookmarked(response.data.bookmarks.includes(titleSlug));
+      } catch (error) {
+        console.error("Error checking bookmark:", error);
+      }
+    };
+    checkBookmark();
+  }, [titleSlug]);
+
+  const toggleBookmark = async (e) => {
+    e.stopPropagation();
+    console.log(e);
+    try {
+      await axios.post(
+        "http://localhost:3000/bookmarks/toggle",
+        { problemSlug: titleSlug },
+        { headers: { Authorization: `Bearer ${localStorage.getItem("jwtoken")}` } }
+      );
+      setIsBookmarked((prev) => !prev);
+      if (onBookmarkToggle) onBookmarkToggle(titleSlug);
+    } catch (error) {
+      console.error("Error toggling bookmark:", error);
+    }
+  };
+
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Easy":
@@ -30,6 +67,17 @@ const ProblemCard = ({
         <span className="problem-id">#{id}</span>
         <span className="problem-title">{title}</span>
         {locked && <span className="locked-icon">🔒</span>}
+        <p
+          onClick={toggleBookmark}
+          // className={`bookmark-button ${isBookmarked ? "bookmarked" : ""}`}
+          style={{
+            // backgroundColor: "none",
+            color: "#00D4FF",
+            transition: "background-color 0.3s ease"
+          }}
+        >
+          {!isBookmarked ? <CiBookmark/> : <FaBookmark/>}
+        </p>
       </div>
 
       <div className="card-info">
@@ -40,9 +88,7 @@ const ProblemCard = ({
         >
           {difficulty}
         </span>
-        <span className="accuracy">
-          Accuracy: {Accuracy.toFixed(2)}%
-        </span>
+        <span className="accuracy">Accuracy: {Accuracy.toFixed(2)}%</span>
       </div>
 
       {tags && tags.length > 0 && (
