@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import '../styles/UserProfile.css';
 import EditProfile from '../components/EditProfile';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const FriendsProfile = () => {
   const [userData, setUserData] = useState({
@@ -19,6 +19,15 @@ const FriendsProfile = () => {
   const queryParams = new URLSearchParams(window.location.search);
   const {id} = useParams();
   const userId = id;
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Redirect to the login page if the user is not authenticated
+    const jwtoken = localStorage.getItem("jwtoken");
+    if (jwtoken === null || jwtoken === undefined) {
+      navigate("/login");
+    }
+  });
 
   // Fetch user data (replace with your actual API call)
   useEffect(() => {

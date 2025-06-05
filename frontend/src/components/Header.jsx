@@ -10,6 +10,8 @@ function Header() {
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
+    location.reload();
+    console.log("logged out ..")
   };
 
   const handleHamburgerClick = () => {

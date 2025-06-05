@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import "../styles/askAI.css";
+import {useNavigate} from 'react-router-dom'
 
 function AskAIPage() {
   const [message, setMessage] = useState("");
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [conversation, setConversation] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Redirect to the login page if the user is not authenticated

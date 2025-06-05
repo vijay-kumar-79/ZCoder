@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import axios from "axios";
 import { LANGUAGE_VERSIONS, CODE_SNIPPETS } from "./constants";
@@ -10,18 +10,16 @@ export default function CodeEditor({
   onChange,
   inputValue,
   onInputChange,
+  language,
+  onLanguageChange,
 }) {
-  const [language, setLanguage] = useState("cpp");
   const [output, setOutput] = useState("");
-  const didMount = useRef(false);
 
   useEffect(() => {
-    if (didMount.current) {
+    const isDefaultSnippet = Object.values(CODE_SNIPPETS).includes(value);
+    if (isDefaultSnippet || !value) {
       onChange(CODE_SNIPPETS[language]);
-    } else {
-      didMount.current = true;
     }
-    // eslint-disable-next-line
   }, [language]);
 
   const runCode = async () => {
@@ -46,7 +44,10 @@ export default function CodeEditor({
     <div className="editor-container">
       <h1 className="editor-heading">Online IDE</h1>
 
-      <LanguageSelector language={language} setLanguage={setLanguage} />
+      <LanguageSelector
+        language={language}
+        setLanguage={onLanguageChange}
+      />
 
       <Editor
         height="300px"

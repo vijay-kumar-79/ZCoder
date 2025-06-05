@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "../styles/rooms.css";
 import io from "socket.io-client";
 import CodeEditor from "../components/CodeEditor";
@@ -14,9 +14,11 @@ function RoomPage() {
   const [chatMode, setChatMode] = useState(true);
   const [sharedText, setSharedText] = useState("");
   const [sharedInput, setSharedInput] = useState("");
+  const [sharedLanguage, setSharedLanguage] = useState("cpp");
   const textAreaRef = useRef(null);
   const messagesEndRef = useRef(null);
   const socket = useRef();
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Redirect to the login page if the user is not authenticated
@@ -50,13 +52,12 @@ function RoomPage() {
 
     socket.current.on(
       "room-init",
-      ({ users, sharedText, sharedInput, previousMessages }) => {
+      ({ users, sharedText, sharedInput, sharedLanguage, previousMessages }) => {
         setUsers(users);
         setSharedText(sharedText);
         setSharedInput(sharedInput || "");
-        if (previousMessages) {
-          setMessages(previousMessages);
-        }
+        setSharedLanguage(sharedLanguage || "cpp");
+        if (previousMessages) setMessages(previousMessages);
       }
     );
 
@@ -70,6 +71,10 @@ function RoomPage() {
       if (input !== sharedInput) {
         setSharedInput(input);
       }
+    });
+
+    socket.current.on("language-change", (language) => {
+      setSharedLanguage(language);
     });
 
     return () => {
@@ -180,6 +185,11 @@ function RoomPage() {
                   roomId,
                   input: newInput,
                 });
+              }}
+              language={sharedLanguage}
+              onLanguageChange={(lang) => {
+                setSharedLanguage(lang);
+                socket.current.emit("language-change", { roomId, language: lang });
               }}
               height="70vh"
               width="100%"

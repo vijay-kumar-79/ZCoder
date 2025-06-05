@@ -18,7 +18,8 @@ function socketHandler(io) {
         rooms.set(roomId, {
           users: new Set(),
           sharedText: "",
-          sharedInput: "", // Add this line
+          sharedInput: "",
+          sharedLanguage: "cpp", // Add this line
         });
       }
       rooms.get(roomId).users.add(username);
@@ -32,7 +33,8 @@ function socketHandler(io) {
         socket.emit("room-init", {
           users: Array.from(rooms.get(roomId).users),
           sharedText: rooms.get(roomId).sharedText,
-          sharedInput: rooms.get(roomId).sharedInput, // Add this line
+          sharedInput: rooms.get(roomId).sharedInput,
+          sharedLanguage: rooms.get(roomId).sharedLanguage, // Add this line
           previousMessages,
         });
       } catch (err) {
@@ -71,6 +73,13 @@ function socketHandler(io) {
         rooms.get(roomId).sharedInput = input;
       }
       socket.to(roomId).emit("input-edit", input);
+    });
+
+    socket.on("language-change", ({ roomId, language }) => {
+      if (rooms.has(roomId)) {
+        rooms.get(roomId).sharedLanguage = language;
+      }
+      socket.to(roomId).emit("language-change", language);
     });
 
     socket.on("disconnect", () => {
