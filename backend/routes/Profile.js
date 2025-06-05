@@ -103,10 +103,9 @@ router.get("/profile", auth, async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => { 
   // console.log("qwertyuiop");
   const { id } = req.params;
-  // console.log(id);
   const dbUser = await User.findById(id);
   if (dbUser) {
     res.status(200).json({

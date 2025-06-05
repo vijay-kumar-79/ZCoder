@@ -33,7 +33,7 @@ function App() {
         <Route path="/discussions/:titleSlug" element={<Discussions />} />
         <Route path="/solution/:id" element={<SolutionDetail />} />
         <Route path="/profile" element={<UserProfile />} />
-        <Route path="/user?" element={<FriendsProfile />} />
+        <Route path="/user/:id" element={<FriendsProfile />} />
         <Route path="/bookmarks" element={<Bookmarks/>} />
       </Routes>
     </BrowserRouter>

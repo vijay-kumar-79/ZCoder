@@ -12,7 +12,8 @@ const loginRoute = require("./routes/LoginRoute.js");
 const solutionsRoute = require("./routes/Solutions.js");
 const profileRoute = require("./routes/Profile.js");
 const socketHandler = require("./socketHandler");
-const bookmarksRoute=require("./routes/Bookmarks.js");
+const bookmarksRoute = require("./routes/Bookmarks.js");
+const User = require("./models/UserModel.js");
 require("dotenv").config();
 
 // Connect to MongoDB
@@ -43,6 +44,30 @@ app.use("/", loginRoute);
 app.use("/api/solutions", solutionsRoute);
 app.use("/user", profileRoute);
 app.use("/bookmarks", bookmarksRoute);
+app.get("/users/:username", async (req, res) => {
+  const { username } = req.params;
+  if (!username || username.trim() === "") {
+    return res.status(400).send([]);
+  }
+  try {
+    const usersList = await User.find({
+      Username: { $regex: `^${username}`, $options: "i" },
+    }).select("_id Username"); // Only select _id and Username fields
+
+    if (usersList && usersList.length > 0) {
+      // Map to return array of objects with id and username
+      const result = usersList.map((user) => ({
+        id: user._id,
+        username: user.Username,
+      }));
+      res.status(200).send(result);
+    } else {
+      res.status(404).send("No users found!");
+    }
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
 app.get("/ping", (req, res) => {
   console.log(process.env.GROQ_API_KEY);
   res.json({ msg: "API is working !!" });
