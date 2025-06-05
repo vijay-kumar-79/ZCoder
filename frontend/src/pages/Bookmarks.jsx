@@ -93,12 +93,13 @@ function Bookmarks() {
       navigate("/login");
     }
   });
+  const backend = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Fetch bookmarks from the backend
     async function fetchBookmarks() {
       try {
-        const response = await fetch("http://localhost:3000/bookmarks", {
+        const response = await fetch(`${backend}/bookmarks`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

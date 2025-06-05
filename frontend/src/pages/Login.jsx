@@ -9,6 +9,7 @@ function LoginPage() {
   const togglePassword = () => {
     setHide(!hide);
   };
+  const backend = import.meta.env.VITE_BACKEND_URL;
 
   const formSubmitted = async (event) => {
     event.preventDefault();
@@ -18,7 +19,7 @@ function LoginPage() {
     form.reset();
     setHide(true);
     try {
-      const response = await fetch(`http://localhost:3000/login/`, {
+      const response = await fetch(`${backend}/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

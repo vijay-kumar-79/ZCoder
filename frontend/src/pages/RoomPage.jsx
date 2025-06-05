@@ -27,9 +27,10 @@ function RoomPage() {
       navigate("/login");
     }
   });
+  const backend = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-    socket.current = io("http://localhost:3000");
+    socket.current = io(`${backend}`);
 
     socket.current.emit("join-room", { roomId, username });
 

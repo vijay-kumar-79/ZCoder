@@ -17,11 +17,12 @@ const ProblemCard = ({
   onBookmarkToggle
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const backend = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const checkBookmark = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/bookmarks", {
+        const response = await axios.get(`${backend}/bookmarks`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("jwtoken")}` },
         });
         setIsBookmarked(response.data.bookmarks.includes(titleSlug));
@@ -37,7 +38,7 @@ const ProblemCard = ({
     console.log(e);
     try {
       await axios.post(
-        "http://localhost:3000/bookmarks/toggle",
+        `${backend}/bookmarks/toggle`,
         { problemSlug: titleSlug },
         { headers: { Authorization: `Bearer ${localStorage.getItem("jwtoken")}` } }
       );
