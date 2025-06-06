@@ -30,7 +30,7 @@ function AskAIPage() {
       setConversation((prev) => [...prev, userMessage]);
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/ask-ai`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/ask-ai`,
         {
           message,
         }

@@ -17,7 +17,7 @@ const ProblemCard = ({
   onBookmarkToggle
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const backend = import.meta.env.VITE_BACKEND_URL;
+  const backend = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const checkBookmark = async () => {

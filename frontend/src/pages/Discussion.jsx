@@ -11,7 +11,7 @@ const Discussions = () => {
   const [solutions, setSolutions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const backend = import.meta.env.VITE_BACKEND_URL;
+  const backend = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     // Redirect to the login page if the user is not authenticated
