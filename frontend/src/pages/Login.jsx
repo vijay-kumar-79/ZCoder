@@ -9,7 +9,7 @@ function LoginPage() {
   const togglePassword = () => {
     setHide(!hide);
   };
-  const backend = import.meta.env.VITE_BACKEND_URL;
+  const backend = process.env.REACT_APP_BACKEND_URL;
 
   const formSubmitted = async (event) => {
     event.preventDefault();

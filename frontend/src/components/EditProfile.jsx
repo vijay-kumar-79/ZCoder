@@ -6,7 +6,7 @@ import axios from "axios";
 const EditProfile = ({ userData, onUpdate, showToast }) => {
   // Local state for editable fields (initialize with current user data)
   const [formData, setFormData] = useState({ ...userData });
-  const backend = import.meta.env.VITE_BACKEND_URL;
+  const backend = process.env.REACT_APP_BACKEND_URL;
   // Local state for password section
   const [passwords, setPasswords] = useState({
     currentPassword: "",

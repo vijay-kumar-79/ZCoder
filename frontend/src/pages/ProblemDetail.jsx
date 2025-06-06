@@ -16,7 +16,7 @@ const ProblemDetail = () => {
   const [submissionResult, setSubmissionResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [language, setLanguage] = useState("cpp"); // Add language state
-  const backend = import.meta.env.VITE_BACKEND_URL;
+  const backend = process.env.REACT_APP_BACKEND_URL;
   const LEETCODE_API = `https://leetcode-api-mu.vercel.app/select?titleSlug=${titleSlug}`;
 
   useEffect(() => {

@@ -25,7 +25,7 @@ export default function CodeEditor({
   const runCode = async () => {
     setOutput("Running...");
     try {
-      const response = await axios.post(import.meta.env.VITE_JUDGE, {
+      const response = await axios.post(process.env.REACT_APP_JUDGE, {
         language,
         version: LANGUAGE_VERSIONS[language],
         files: [{ content: value }],

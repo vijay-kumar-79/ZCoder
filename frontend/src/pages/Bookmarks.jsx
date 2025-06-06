@@ -93,7 +93,7 @@ function Bookmarks() {
       navigate("/login");
     }
   });
-  const backend = import.meta.env.VITE_BACKEND_URL;
+  const backend = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     // Fetch bookmarks from the backend

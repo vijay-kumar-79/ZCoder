@@ -34,7 +34,7 @@ const UserProfile = () => {
       navigate("/login");
     }
   });
-  const backend = import.meta.env.VITE_BACKEND_URL;
+  const backend = process.env.REACT_APP_BACKEND_URL;
 
   // Fetch user data (replace with your actual API call)
   useEffect(() => {

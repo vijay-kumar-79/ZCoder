@@ -10,6 +10,7 @@ function Header() {
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
+    window.location.reload();
     console.log("logged out ..")
   };
 
@@ -25,7 +26,7 @@ function Header() {
   return (
     <header className="navbar">
       <nav>
-        <img src={Logo} alt="Logo" className="nav-logo" />
+        <img src={Logo} alt="Logo" className="nav-logo" onClick={() => navigate("/")}/>
         <button
           className={`hamburger${menuOpen ? " active" : ""}`}
           aria-label="Toggle navigation menu"
