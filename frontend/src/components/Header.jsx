@@ -9,8 +9,7 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
-    location.reload();
+    navigate("/");
     console.log("logged out ..")
   };
 
