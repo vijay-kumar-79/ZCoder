@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 // import Loader from "./Loader";
-import "../styles/Discussion.css";
+import "../styles/discussion.css";
 
 const Discussions = () => {
   const navigate = useNavigate();
