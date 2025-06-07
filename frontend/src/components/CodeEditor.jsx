@@ -55,6 +55,14 @@ export default function CodeEditor({
         theme="vs-dark"
         value={value}
         onChange={onChange}
+        options={{
+          // Disable autosuggestions
+          quickSuggestions: false,
+          suggestOnTriggerCharacters: false,
+          wordBasedSuggestions: false,
+          snippetsSuggestions: "none",
+          parameterHints: { enabled: false },
+        }}
       />
 
       <textarea
