@@ -17,6 +17,7 @@ const ProblemCard = ({
   onBookmarkToggle
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [loadingBookmark, setLoadingBookmark] = useState(true);
   const backend = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
@@ -25,27 +26,41 @@ const ProblemCard = ({
         const response = await axios.get(`${backend}/bookmarks`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("jwtoken")}` },
         });
-        setIsBookmarked(response.data.bookmarks.includes(titleSlug));
+
+        // Add null checks for response data
+        const bookmarks = response.data?.bookmarks || [];
+        setIsBookmarked(bookmarks.includes(titleSlug));
       } catch (error) {
         console.error("Error checking bookmark:", error);
+        setIsBookmarked(false);
+      } finally {
+        setLoadingBookmark(false);
       }
     };
-    checkBookmark();
-  }, [titleSlug]);
+
+    if (titleSlug) {
+      checkBookmark();
+    }
+  }, [titleSlug, backend]);
 
   const toggleBookmark = async (e) => {
     e.stopPropagation();
-    console.log(e);
+
+    if (loadingBookmark) return;
+
     try {
+      setLoadingBookmark(true);
       await axios.post(
         `${backend}/bookmarks/toggle`,
         { problemSlug: titleSlug },
         { headers: { Authorization: `Bearer ${localStorage.getItem("jwtoken")}` } }
       );
       setIsBookmarked((prev) => !prev);
-      if (onBookmarkToggle) onBookmarkToggle(titleSlug);
+      if (onBookmarkToggle) onBookmarkToggle(titleSlug, !isBookmarked);
     } catch (error) {
       console.error("Error toggling bookmark:", error);
+    } finally {
+      setLoadingBookmark(false);
     }
   };
 
@@ -68,17 +83,27 @@ const ProblemCard = ({
         <span className="problem-id">#{id}</span>
         <span className="problem-title">{title}</span>
         {locked && <span className="locked-icon">🔒</span>}
-        <p
+        <button
           onClick={toggleBookmark}
-          // className={`bookmark-button ${isBookmarked ? "bookmarked" : ""}`}
+          disabled={loadingBookmark}
           style={{
-            // backgroundColor: "none",
-            color: "#00D4FF",
-            transition: "background-color 0.3s ease"
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: isBookmarked ? "#00D4FF" : "#ccc",
+            transition: "color 0.3s ease",
+            padding: 0,
+            fontSize: "1.2rem"
           }}
         >
-          {!isBookmarked ? <CiBookmark/> : <FaBookmark/>}
-        </p>
+          {loadingBookmark ? (
+            <span>...</span>
+          ) : isBookmarked ? (
+            <FaBookmark />
+          ) : (
+            <CiBookmark />
+          )}
+        </button>
       </div>
 
       <div className="card-info">
@@ -89,7 +114,7 @@ const ProblemCard = ({
         >
           {difficulty}
         </span>
-        <span className="accuracy">Accuracy: {Accuracy.toFixed(2)}%</span>
+        <span className="accuracy">Accuracy: {Accuracy?.toFixed(2) || 0}%</span>
       </div>
 
       {tags && tags.length > 0 && (
