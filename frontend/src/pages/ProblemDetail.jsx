@@ -62,7 +62,7 @@ const ProblemDetail = () => {
         {
           problemSlug: titleSlug,
           code,
-          language: "javascript",
+          language: language,
         },
         {
           headers: {
