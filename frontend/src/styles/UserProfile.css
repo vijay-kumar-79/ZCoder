@@ -1,255 +1,263 @@
-
-
-
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+/* ============================================================
+   Profile page + edit profile form. Tokens come from index.css.
+   ============================================================ */
 
 .profile-container {
-  max-width: 800px;
+  max-width: 820px;
   margin: 2rem auto;
-  padding: 3rem;
+  padding: 2.25rem;
   background: var(--secondary-background);
-  border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4),
-              0 4px 16px rgba(0, 212, 255, 0.15);
+  border: 1px solid var(--highlight);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
   color: var(--text-primary);
-  font-family: 'Poppins', sans-serif;
+}
+
+.profile-container > h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin-bottom: 1.75rem;
 }
 
 .profile-box {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem;
 }
 
 .profile-picture-box {
   display: flex;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .profile-pic {
-  width: 160px;
-  height: 160px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   object-fit: cover;
-  border: 5px solid var(--success);
-  box-shadow: 0 6px 16px rgba(52, 199, 89, 0.4);
+  border: 3px solid var(--primary-accent);
+  box-shadow: var(--shadow-card);
 }
 
 .info-box {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 .user-details-box,
 .codeforces-box,
 .skills-box {
   background: var(--primary-background);
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.02);
-  font-size: 1.1rem;
+  border: 1px solid var(--highlight);
+  padding: 1.4rem 1.6rem;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
   line-height: 1.6;
   color: var(--text-secondary);
 }
 
 .user-details-box {
-  background: rgba(52, 199, 89, 0.08);
-  border-left: 6px solid var(--success);
-  font-family: 'Roboto', sans-serif;
-  font-weight: 500;
+  text-align: center;
+  padding: 1.75rem 1.6rem;
 }
 
 .user-details-box h2 {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
+  font-size: 1.7rem;
+  margin-bottom: 0.4rem;
   color: var(--text-primary);
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .user-details-box p,
 .codeforces-box p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--text-secondary);
-  margin: 0.5rem 0;
+  margin: 0.25rem 0;
+  overflow-wrap: anywhere;
 }
 
-.codeforces-box {
-  background: rgba(0, 212, 255, 0.08);
-  border-left: 6px solid var(--primary-accent);
-}
-
-.codeforces-box h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.skills-box {
-  background: rgba(123, 44, 191, 0.1);
-  border-left: 6px solid var(--secondary-accent);
-}
-
+.codeforces-box h3,
 .skills-box h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  margin-bottom: 0.7rem;
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .skills-box ul {
   list-style: none;
   padding: 0;
-  margin: 0.5rem 0 0 0;
+  margin: 0.5rem 0 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
+  gap: 0.5rem;
 }
 
 .skills-box li {
   display: inline-block;
-  padding: 0.5rem 1.2rem;
-  background: var(--secondary-background);
-  border-radius: 20px;
-  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
-  font-size: 1rem;
+  padding: 0.3rem 0.9rem;
+  background: var(--accent-soft);
+  border: 1px solid rgba(76, 201, 240, 0.3);
+  border-radius: 999px;
+  color: var(--primary-accent);
+  font-size: 0.88rem;
   font-weight: 500;
 }
 
 .edit-btn {
-  background: var(--success);
-  color: var(--primary-background);
+  background: var(--primary-accent);
+  color: #06131A;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 600;
+  padding: 0.8rem 2rem;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 650;
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(52, 199, 89, 0.3);
-  transition: all 0.3s;
+  transition: background 0.2s ease, transform 0.15s ease;
   align-self: center;
-  margin-top: 1rem;
-  letter-spacing: 0.5px;
+  margin-top: 0.5rem;
 }
 
 .edit-btn:hover {
-  background: #28a745;
-  box-shadow: 0 8px 20px rgba(52, 199, 89, 0.4);
-  transform: translateY(-2px);
+  background: #6AD7F7;
 }
 
+.edit-btn:active {
+  transform: scale(0.98);
+}
+
+/* ---------- Edit profile ---------- */
 .edit-profile-container {
   background: var(--secondary-background);
-  padding: 3rem;
-  border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4),
-              0 4px 16px rgba(0, 212, 255, 0.15);
-  font-family: 'Poppins', sans-serif;
-  max-width: 700px;
+  border: 1px solid var(--highlight);
+  padding: 2.25rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  max-width: 720px;
   margin: 2rem auto;
 }
 
 .edit-profile-container h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
+  font-size: 1.7rem;
+  margin-bottom: 1.75rem;
   color: var(--text-primary);
   text-align: center;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.form-group {
-  margin-bottom: 2rem;
+.edit-profile-container .form-group {
+  margin-bottom: 1.1rem;
 }
 
-.form-group label {
+.edit-profile-container .form-group label {
   display: block;
-  margin-bottom: 0.8rem;
-  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-secondary);
 }
 
-.form-group input {
+.edit-profile-container .form-group input {
   width: 100%;
-  padding: 1rem;
-  border: 2px solid var(--highlight);
-  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--highlight);
+  border-radius: var(--radius-sm);
   background: var(--primary-background);
   color: var(--text-primary);
-  font-size: 1.1rem;
-  font-family: 'Roboto', sans-serif;
-  transition: all 0.3s;
+  font-size: 0.98rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-group input:focus {
+.edit-profile-container .form-group input:focus {
   border-color: var(--primary-accent);
-  background: var(--secondary-background);
-  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+  box-shadow: 0 0 0 3px var(--accent-soft);
   outline: none;
 }
 
-.update-btn {
-  background: var(--success);
-  color: var(--primary-background);
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 600;
+.edit-profile-container .form-group input::file-selector-button {
+  margin-right: 0.75rem;
+  padding: 0.35rem 0.9rem;
+  background: var(--secondary-background);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(52, 199, 89, 0.3);
-  transition: all 0.3s;
+}
+
+.update-btn {
+  background: var(--primary-accent);
+  color: #06131A;
+  border: none;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.98rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
   width: 100%;
-  margin-top: 1rem;
-  letter-spacing: 0.5px;
+  margin-top: 0.5rem;
 }
 
 .update-btn:hover {
-  background: #28a745;
-  box-shadow: 0 8px 20px rgba(52, 199, 89, 0.4);
-  transform: translateY(-2px);
+  background: #6AD7F7;
+}
+
+.update-btn:active {
+  transform: scale(0.99);
 }
 
 .edit-section {
   background: var(--primary-background);
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--highlight);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.password-section {
-  background: rgba(0, 212, 255, 0.08);
-  border-left: 6px solid var(--primary-accent);
+.edit-section h3 {
+  font-size: 1.05rem;
+  font-weight: 650;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
 }
 
 .button-row {
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
 }
 
 .cancel-btn {
   background: transparent;
-  color: var(--success);
-  border: 2px solid var(--success);
-  padding: 1rem 2rem;
-  border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.2rem;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.98rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
 }
 
 .cancel-btn:hover {
-  background: var(--secondary-background);
-  color: #28a745;
-  border-color: #28a745;
+  border-color: var(--error);
+  color: var(--error);
+}
+
+@media (max-width: 640px) {
+  .profile-container,
+  .edit-profile-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
 }

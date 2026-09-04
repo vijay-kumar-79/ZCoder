@@ -83,16 +83,8 @@ function Bookmarks() {
   const navigate = useNavigate();
   const [problems, setProblems] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]); // for tags
-  const [bookmarks, setBookmarks] = useState([]);
-  const [filterMode, setFilterMode] = useState("OR"); // as toggles btw STATE
+  const [filterMode, setFilterMode] = useState("OR"); // toggles between OR/AND
 
-  useEffect(() => {
-    // Redirect to the login page if the user is not authenticated
-    const jwtoken = localStorage.getItem("jwtoken");
-    if (jwtoken === null || jwtoken === undefined) {
-      navigate("/login");
-    }
-  });
   const backend = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
@@ -121,7 +113,7 @@ function Bookmarks() {
       }
     }
     fetchBookmarks();
-  }, []);
+  }, [backend]);
 
   useEffect(() => {
     // Redirect to the login page if the user is not authenticated
@@ -129,7 +121,7 @@ function Bookmarks() {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
 
   const handleCardClick = (titleSlug) => {
     navigate(`/problem/${titleSlug}`); //take inp as params in this route
@@ -153,7 +145,7 @@ function Bookmarks() {
 
   return (
     <div className="dashboard-page">
-      <h1>Problems</h1>
+      <h1>Bookmarked Problems</h1>
 
       {/* Filter Mode Toggle */}
       <div className="filter-mode-toggle">
@@ -212,7 +204,9 @@ function Bookmarks() {
           </ul>
         ) : (
           <div className="no-problems">
-            No problems found for selected tags.
+            {selectedTags.length > 0
+              ? "No problems found for the selected tags."
+              : "No bookmarks yet. Save problems from the dashboard to see them here."}
           </div>
         )}
       </div>

@@ -33,7 +33,7 @@ const UserProfile = () => {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
   const backend = process.env.REACT_APP_BACKEND_URL;
 
   // Fetch user data (replace with your actual API call)
@@ -59,7 +59,7 @@ const UserProfile = () => {
       }
     };
     fetchUserData();
-  }, []);
+  }, [backend]);
 
   // Fetch Codeforces info (handles array response)
   const fetchCodeforcesInfo = async (handle) => {

@@ -1,13 +1,10 @@
 import React, { useState,useEffect } from 'react';
 import '../styles/UserProfile.css';
-import EditProfile from '../components/EditProfile';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const FriendsProfile = () => {
   const [userData, setUserData] = useState({
     name: '',
-    email: '',
-    phoneNumber: '',
     profilePicture: '',
     codeforcesHandle: '',
     codeforcesRating: '',
@@ -15,11 +12,9 @@ const FriendsProfile = () => {
     skills: []
   });
   const [cfInfo, setCfInfo] = useState(null);
-  // Get query parameter from URL (e.g., ?id=123)
-  const queryParams = new URLSearchParams(window.location.search);
-  const {id} = useParams();
+  const { id } = useParams();
   const userId = id;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Redirect to the login page if the user is not authenticated
@@ -27,7 +22,7 @@ const FriendsProfile = () => {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
   const backend = process.env.REACT_APP_BACKEND_URL;
 
   // Fetch user data (replace with your actual API call)
@@ -52,7 +47,7 @@ const FriendsProfile = () => {
       }
     };
     fetchUserData();
-  }, []);
+  }, [backend, userId]);
 
   // Fetch Codeforces info (handles array response)
   const fetchCodeforcesInfo = async (handle) => {
@@ -91,9 +86,7 @@ const FriendsProfile = () => {
         </div>
         <div className="info-box">
           <div className="user-details-box">
-            <h2>{userData.name}</h2>
-            <p>{userData.email}</p>
-            <p>{userData.phoneNumber}</p>
+            <h2>{userData.name || "Coder"}</h2>
           </div>
           <div className="codeforces-box">
             <h3>Codeforces Handle: {userData.codeforcesHandle || 'Not set'}</h3>

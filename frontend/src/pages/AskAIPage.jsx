@@ -6,7 +6,6 @@ import {useNavigate} from 'react-router-dom'
 
 function AskAIPage() {
   const [message, setMessage] = useState("");
-  const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [conversation, setConversation] = useState([]);
   const navigate = useNavigate()
@@ -17,7 +16,7 @@ function AskAIPage() {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,13 +32,17 @@ function AskAIPage() {
         `${process.env.REACT_APP_BACKEND_URL}/api/ask-ai`,
         {
           message,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtoken")}`,
+          },
         }
       );
 
       // Add AI response to conversation
       const aiMessage = { sender: "ai", text: response.data.answer };
       setConversation((prev) => [...prev, aiMessage]);
-      setAnswer(response.data.answer);
     } catch (error) {
       console.error("Error getting AI response:", error);
       setConversation((prev) => [

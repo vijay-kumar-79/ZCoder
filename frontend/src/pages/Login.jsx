@@ -45,7 +45,7 @@ function LoginPage() {
     <div className="App">
       <div className="register-container">
         <div>
-          <img src={logo} alt="Sholarseek Logo" className="logo" />
+          <img src={logo} alt="ZCoder logo" className="logo" />
         </div>
         <form id="login-form" onSubmit={formSubmitted} >
           <div className="form-group">

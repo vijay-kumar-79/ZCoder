@@ -16,7 +16,6 @@ function RegisterPage() {
     const form = document.getElementById('register-form');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-    console.log('Form submitted with data:',data);
     form.reset();
     setHide(true);
     try {
@@ -27,14 +26,11 @@ function RegisterPage() {
         },
         body: JSON.stringify(data),
       });
-      console.log('Response status:', response );
       if (response.ok) {
-        console.log('User registered successfully:');
         alert('Registration successful!');
         navigate('/login'); 
       } else {
         const error = await response.text();
-        console.error('Error registering user:', error);
         alert(`Registration failed: ${error}`);
       }
     } catch (error) {
@@ -48,7 +44,7 @@ function RegisterPage() {
     <div className='App'>
       <div className="register-container">
         <div className="logo">
-              <img src={logo} alt="NXT Watch Logo" className="logo" />
+              <img src={logo} alt="ZCoder logo" className="logo" />
         </div>
         <form id="register-form" onSubmit={formSubmitted}>
             <div className="form-group">
@@ -61,7 +57,7 @@ function RegisterPage() {
             </div>
             <div className="form-group">
                 <label htmlFor="password" className="form-label">PASSWORD</label>
-                <input type={hide ? "password" : "text"} id="passweord" className="form-input" name="password" placeholder="Password" required />
+                <input type={hide ? "password" : "text"} id="password" className="form-input" name="password" placeholder="Password" required />
             </div>
             <div className="checkbox-container">
                 <input type="checkbox" className="checkbox" id="showpassword" onChange={togglePassword} />

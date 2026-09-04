@@ -26,7 +26,7 @@ function RoomPage() {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
   const backend = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
@@ -81,6 +81,10 @@ function RoomPage() {
     return () => {
       socket.current.disconnect();
     };
+    // Intentionally keyed on username/roomId only: sharedText/sharedInput are
+    // the very state this socket keeps in sync, so subscribing to them would
+    // tear down and rebuild the connection on every keystroke.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, roomId]);
 
   // Auto-scroll to bottom of messages
@@ -148,7 +152,10 @@ function RoomPage() {
             </div>
             <div className="messages">
               {messages.map((msg, index) => (
-                <div key={index} className="message">
+                <div
+                  key={index}
+                  className={`message${msg.username === username ? " own" : ""}`}
+                >
                   <div className="message-header">
                     <strong>{msg.username}</strong>
                     <span className="message-time">

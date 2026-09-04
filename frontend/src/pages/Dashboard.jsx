@@ -79,25 +79,47 @@ const STATIC_TAGS = [
   "Biconnected Component",
 ];
 
+const PAGE_SIZE = 25;
+
 function Dashboard() {
   const navigate = useNavigate();
+  const backend = process.env.REACT_APP_BACKEND_URL;
   const [problems, setProblems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jumpInput, setJumpInput] = useState("1");
   const [selectedTags, setSelectedTags] = useState([]);
   const [filterMode, setFilterMode] = useState("OR"); // as toggles btw STATE
+
   useEffect(() => {
     async function fetchProblems() {
+      setLoading(true);
+      setFetchError(null);
       try {
-        const response = await axios.get(
-          `https://leetcode-api-mu.vercel.app/problems?limit=100`
-        );
-        setProblems(response.data.problemsetQuestionList);
+        // /api/problems on our backend returns the FULL catalog (fetched from
+        // the LeetCode mirror in pages and cached) instead of the mirror's
+        // fixed 100-problem cap.
+        const response = await axios.get(`${backend}/api/problems`);
+        setProblems(response.data.problemsetQuestionList || []);
       } catch (error) {
         console.error("Error fetching problems:", error);
+        setFetchError(
+          error.response?.data?.error ||
+            "Could not load problems. Please try again later."
+        );
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchProblems();
-  }, []);
+  }, [backend]);
+
+  // Any filter change restarts browsing from the first page
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTags, filterMode]);
 
   useEffect(() => {
     // Redirect to the login page if the user is not authenticated
@@ -105,7 +127,7 @@ function Dashboard() {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
 
   const handleCardClick = (titleSlug) => {
     navigate(`/problem/${titleSlug}`); //take inp as params in this route
@@ -126,6 +148,49 @@ function Dashboard() {
             ? selectedTags.some((tag) => tagNames.includes(tag))
             : selectedTags.every((tag) => tagNames.includes(tag));
         });
+
+  // --- Pagination (client-side over the full fetched catalog) ---
+  const totalPages = Math.max(1, Math.ceil(filteredProblems.length / PAGE_SIZE));
+  // Clamp in case a filter change shrinks the list while we are past the end
+  const safePage = Math.min(currentPage, totalPages);
+  const pageStart = (safePage - 1) * PAGE_SIZE;
+  const pageProblems = filteredProblems.slice(pageStart, pageStart + PAGE_SIZE);
+
+  // Keep the jump box in sync with the current page
+  useEffect(() => {
+    setJumpInput(String(safePage));
+  }, [safePage]);
+
+  // Compact numbered pagination: 1 ... 4 5 [6] 7 8 ... 20
+  const pageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || Math.abs(i - safePage) <= 2) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "...") {
+        pages.push("...");
+      }
+    }
+    return pages;
+  };
+
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages || page === safePage) return;
+    setCurrentPage(page);
+    // Bring the list back into view when jumping pages
+    document
+      .getElementById("problem-list-top")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const applyJump = () => {
+    const parsed = parseInt(jumpInput, 10);
+    if (Number.isNaN(parsed)) {
+      setJumpInput(String(safePage));
+      return;
+    }
+    goToPage(Math.min(totalPages, Math.max(1, parsed)));
+  };
 
   return (
     <div className="dashboard-page">
@@ -162,27 +227,92 @@ function Dashboard() {
       </div>
 
       {/* Problem List */}
-      <div className="problems-container">
-        {filteredProblems.length > 0 ? (
-          <ul className="problem-list">
-            {filteredProblems.map((problem) => (
-              <li key={problem.questionFrontendId}>
-                <ProblemCard
-                  title={problem.title}
-                  platform={"Leetcode"}
-                  difficulty={problem.difficulty}
-                  Accuracy={problem.acRate}
-                  locked={problem.isPaidOnly}
-                  onClick={() => handleCardClick(problem.titleSlug)}
-                  titleSlug={problem.titleSlug}
-                />
-              </li>
-            ))}
-          </ul>
-        ) : (
+      <div id="problem-list-top" className="problems-container">
+        {loading ? (
+          <div className="no-problems">Loading problems...</div>
+        ) : fetchError ? (
+          <div className="no-problems">{fetchError}</div>
+        ) : filteredProblems.length === 0 ? (
           <div className="no-problems">
-            No problems found for selected tags.
+            No problems found for the selected filters.
           </div>
+        ) : (
+          <>
+            <p className="results-summary">
+              Showing {pageStart + 1}–
+              {Math.min(pageStart + PAGE_SIZE, filteredProblems.length)} of{" "}
+              {filteredProblems.length} problem
+              {filteredProblems.length === 1 ? "" : "s"}
+              {selectedTags.length > 0 ? " (filtered)" : ""}
+            </p>
+            <ul className="problem-list">
+              {pageProblems.map((problem) => (
+                <li key={problem.questionFrontendId}>
+                  <ProblemCard
+                    title={problem.title}
+                    platform={"Leetcode"}
+                    difficulty={problem.difficulty}
+                    Accuracy={problem.acRate}
+                    locked={problem.isPaidOnly}
+                    onClick={() => handleCardClick(problem.titleSlug)}
+                    titleSlug={problem.titleSlug}
+                  />
+                </li>
+              ))}
+            </ul>
+
+            {totalPages > 1 && (
+              <nav className="pagination" aria-label="Problem list pages">
+                <button
+                  className="page-button"
+                  disabled={safePage === 1}
+                  onClick={() => goToPage(safePage - 1)}
+                >
+                  ← Prev
+                </button>
+                {pageNumbers().map((p, idx) =>
+                  p === "..." ? (
+                    <span key={`e-${idx}`} className="page-ellipsis">
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={p}
+                      className={`page-button${p === safePage ? " active" : ""}`}
+                      aria-current={p === safePage ? "page" : undefined}
+                      onClick={() => goToPage(p)}
+                    >
+                      {p}
+                    </button>
+                  )
+                )}
+                <button
+                  className="page-button"
+                  disabled={safePage === totalPages}
+                  onClick={() => goToPage(safePage + 1)}
+                >
+                  Next →
+                </button>
+
+                <span className="page-jump">
+                  <label htmlFor="page-jump-input">Go to</label>
+                  <input
+                    id="page-jump-input"
+                    type="number"
+                    min={1}
+                    max={totalPages}
+                    value={jumpInput}
+                    onChange={(e) => setJumpInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") applyJump();
+                    }}
+                    aria-label={`Jump to page (1 to ${totalPages})`}
+                  />
+                  <span>of {totalPages}</span>
+                </span>
+              </nav>
+            )}
+          </>
         )}
       </div>
     </div>

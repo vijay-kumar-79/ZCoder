@@ -13,7 +13,7 @@ function RoomSelection() {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
 
   const joinRoom = (event) => {
     event.preventDefault();

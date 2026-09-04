@@ -179,10 +179,9 @@ const Calendar = () => {
                                                 </a>
                                                 <a
                                                     href={timeAndDateURL}
-                                                    className="contest-link"
+                                                    className="contest-link secondary"
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    style={{ marginLeft: '8px', background: '#333' }}
                                                 >
                                                     View in TimeandDate
                                                 </a>

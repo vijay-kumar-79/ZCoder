@@ -1,93 +1,208 @@
+/* ============================================================
+   Dashboard (problem list) and Bookmarks share these styles.
+   Tokens come from index.css.
+   ============================================================ */
+
 .dashboard-page {
   background-color: var(--primary-background);
   color: var(--text-primary);
-  padding: 20px;
-  min-height: 100vh;
+  padding: 2.5rem max(1rem, calc((100vw - 1180px) / 2)) 4rem;
+  min-height: 100dvh;
 }
 
-.dashboard-page h1 {
-  color: var(--primary-accent);
-  margin-bottom: 20px;
+.dashboard-page > h1 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--highlight);
+}
+
+.tag-filters p,
+.filter-mode-toggle p {
+  color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.tag-filters {
+  margin-bottom: 1.25rem;
 }
 
 .tag-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
-  max-height: 200px;
+  gap: 0.45rem;
+  max-height: 176px;
   overflow-y: auto;
+  padding-right: 0.25rem;
 }
 
 .tag-button {
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
   background-color: var(--secondary-background);
   border: 1px solid var(--highlight);
-  color: var(--text-primary);
+  color: var(--text-secondary);
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
+  font-size: 0.82rem;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .tag-button:hover {
-  background-color: var(--highlight);
-  color: white;
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  background-color: var(--surface-2);
 }
 
 .tag-button.selected {
-  background-color: var(--primary-accent);
+  background-color: var(--accent-soft);
   border-color: var(--primary-accent);
-  color: var(--primary-background);
-  font-weight: bold;
+  color: var(--primary-accent);
+  font-weight: 600;
 }
 
 .filter-mode-toggle {
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-.filter-mode-toggle p {
-  margin-bottom: 8px;
-  color: var(--text-secondary);
+  margin-bottom: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .filter-mode-toggle button {
-  background-color: var(--secondary-accent);
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  background-color: transparent;
+  color: var(--primary-accent);
+  border: 1px solid var(--border-strong);
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s ease-in-out;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
 
 .filter-mode-toggle button:hover {
-  background-color: var(--highlight);
-}
-
-.tag-filters p {
-  color: var(--text-secondary);
-  margin-bottom: 8px;
+  border-color: var(--primary-accent);
+  background-color: var(--accent-soft);
 }
 
 .problems-container {
-  margin-top: 20px;
+  margin-top: 1.5rem;
 }
 
 .problem-list {
   list-style: none;
   padding: 0;
   display: grid;
-  gap: 15px;
+  gap: 0.8rem;
 }
-
 
 .no-problems {
   color: var(--text-secondary);
   text-align: center;
-  padding: 20px;
+  padding: 2.5rem 1.25rem;
   background-color: var(--secondary-background);
-  border-radius: 8px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 1.5rem 1rem 3rem;
+  }
+}
+
+/* --- Pagination & results chrome --- */
+.results-summary {
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.page-button {
+  min-width: 2.4rem;
+  height: 2.4rem;
+  padding: 0 0.7rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--highlight);
+  background-color: var(--secondary-background);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.page-button:hover:not(:disabled) {
+  border-color: var(--primary-accent);
+  color: var(--text-primary);
+  background-color: var(--surface-2);
+}
+
+.page-button.active {
+  background-color: var(--accent-soft);
+  border-color: var(--primary-accent);
+  color: var(--primary-accent);
+}
+
+.page-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-ellipsis {
+  color: var(--text-faint);
+  padding: 0 0.1rem;
+  user-select: none;
+}
+
+.page-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid var(--highlight);
+  color: var(--text-faint);
+  font-size: 0.85rem;
+}
+
+.page-jump input {
+  width: 4.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--highlight);
+  background-color: var(--primary-background);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.page-jump input:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Hide number input spinners for a cleaner look */
+.page-jump input::-webkit-outer-spin-button,
+.page-jump input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.page-jump input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }

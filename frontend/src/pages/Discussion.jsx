@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-// import Loader from "./Loader";
 import "../styles/discussion.css";
 
 const Discussions = () => {
@@ -19,7 +18,7 @@ const Discussions = () => {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
 
   useEffect(() => {
     const fetchSolutions = async () => {
@@ -33,26 +32,31 @@ const Discussions = () => {
       }
     };
     fetchSolutions();
-  }, [titleSlug]);
+  }, [titleSlug, backend]);
 
   const handleVote = async (solutionId, voteType) => {
     try {
-      await axios.post(`${backend}/api/solutions/vote`, {
-        solutionId,
-        voteType,
-      });
+      const res = await axios.post(
+        `${backend}/api/solutions/vote`,
+        { solutionId, voteType },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtoken")}`,
+          },
+        }
+      );
+      // Use the server-returned count so the UI always stays in sync
       setSolutions(
         solutions.map((sol) =>
-          sol._id === solutionId
-            ? {
-                ...sol,
-                votes: voteType === "upvote" ? sol.votes + 1 : sol.votes - 1,
-              }
-            : sol
+          sol._id === solutionId ? { ...sol, votes: res.data.votes } : sol
         )
       );
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      if (err.response?.status === 401) {
+        navigate("/login");
+      } else {
+        setError(err.response?.data?.message || err.message);
+      }
     }
   };
 
