@@ -8,10 +8,11 @@ router.post("/submit", auth, async (req, res) => {
   try {
     const { problemSlug, code, language } = req.body;
 
-    // Here you would typically run the code against test cases
-    // For simplicity, we'll just save it
-    console.log(req.user);
+    if (!problemSlug || !code || !language) {
+      return res.status(400).json({ error: "problemSlug, code and language are required" });
+    }
 
+    // Save the solution to the database
     const solution = new Solution({
       problemSlug,
       code,
@@ -28,7 +29,7 @@ router.post("/submit", auth, async (req, res) => {
       details: "All test cases passed", // Would show actual test results
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -41,7 +42,6 @@ router.delete("/:id", auth, async (req, res) => {
     if (!solution) {
       return res.status(404).json({ error: "Solution not found" });
     }
-    console.log(solution.author, req.user.user_id);
     if (solution.author.toString() !== req.user.user_id) {
       return res
         .status(403)
@@ -51,7 +51,7 @@ router.delete("/:id", auth, async (req, res) => {
     await Solution.deleteOne({ _id: req.params.id });
     res.json({ success: true, message: "Solution deleted successfully" });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -84,24 +84,43 @@ router.get("/detail/:id", async (req, res) => {
   }
 });
 
-// Handle voting
-router.post("/vote", async (req, res) => {
+// Handle voting - authenticated, one vote per user (re-voting toggles/switches)
+router.post("/vote", auth, async (req, res) => {
   try {
     const { solutionId, voteType } = req.body;
-    const solution = await Solution.findById(solutionId);
 
+    if (!["upvote", "downvote"].includes(voteType)) {
+      return res.status(400).json({ error: "Invalid vote type" });
+    }
+
+    const solution = await Solution.findById(solutionId);
     if (!solution) {
       return res.status(404).json({ error: "Solution not found" });
     }
 
-    // Update votes
-    solution.votes += voteType === "upvote" ? 1 : -1;
-    await solution.save();
+    const userId = req.user.user_id;
+    const existing = solution.voters.find((v) => v.userId === userId);
 
+    if (existing) {
+      if (existing.voteType === voteType) {
+        // Same vote again: toggle it off
+        solution.voters = solution.voters.filter((v) => v.userId !== userId);
+        solution.votes += voteType === "upvote" ? -1 : 1;
+      } else {
+        // Switch direction
+        existing.voteType = voteType;
+        solution.votes += voteType === "upvote" ? 2 : -2;
+      }
+    } else {
+      solution.voters.push({ userId, voteType });
+      solution.votes += voteType === "upvote" ? 1 : -1;
+    }
+
+    await solution.save();
     res.json({ success: true, votes: solution.votes });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-module.exports = router;
+module.exports = router;

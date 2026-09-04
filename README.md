@@ -21,8 +21,10 @@ nodemon index.js
 also create a new file called .env in the backend folder at the same level of index.js. The format for it is
 ```
 GROQ_API_KEY = your_api_key
+JUDGE_API_URL = http://35.200.191.27:8000
 ```
 (Create your own key at https://console.groq.com/keys)
+(JUDGE_API_URL points at the code-judging service the backend proxies to; the value above is the default used when it is unset)
 
 ### run frontend
 then open a new terminal and
@@ -35,8 +37,8 @@ also create a new file called .env in the frontend folder at the same level of s
 ```
 REACT_APP_API_URL = https://alfa-leetcode-api.onrender.com
 REACT_APP_BACKEND_URL = http://localhost:5000
-REACT_APP_JUDGE = https://emkc.org/api/v2/piston/execute
 ```
+(The "Run Code" button talks to `/api/judge/*` on your backend, which proxies to the judge service - no `REACT_APP_JUDGE` variable needed.)
 Then visit http://localhost:3000
 ## Features
 

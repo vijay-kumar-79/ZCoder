@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
 const User = require("../models/UserModel");
 const bodyParser = require("body-parser");
 const auth = require("../middleware/auth");
@@ -103,15 +100,13 @@ router.get("/profile", auth, async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => { 
-  // console.log("qwertyuiop");
+// Public profile view - intentionally excludes PII (email, phone)
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const dbUser = await User.findById(id);
   if (dbUser) {
     res.status(200).json({
       name: dbUser.name,
-      email: dbUser.email,
-      phoneNumber: dbUser.phoneNumber,
       profilePicture: dbUser.profilePicture,
       codeforcesHandle: dbUser.codeforcesHandle,
       codeforcesRating: dbUser.codeforcesRating,

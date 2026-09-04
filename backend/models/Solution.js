@@ -22,6 +22,17 @@ const SolutionSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  // Tracks who voted how, so each user can vote exactly once
+  voters: {
+    type: [
+      {
+        userId: { type: String, required: true },
+        voteType: { type: String, enum: ["upvote", "downvote"], required: true },
+      },
+    ],
+    default: [],
+    _id: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
