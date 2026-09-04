@@ -12,7 +12,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@monaco-editor/react": "^4.7.0",
     "axios": "^1.9.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
@@ -21,7 +20,8 @@
     "express": "^5.1.0",
     "groq-sdk": "^0.22.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.15.1",
+    "mongodb": "^7.6.0",
+    "mongoose": "^9.9.4",
     "socket.io": "^4.8.1"
   }
 }
