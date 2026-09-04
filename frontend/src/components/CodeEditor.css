@@ -1,58 +1,119 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+/* ============================================================
+   Code editor chrome. Tokens come from index.css.
+   ============================================================ */
 
 .editor-container {
-  padding: 0 20px;
-  max-width: 900px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
+  width: 100%;
 }
 
 .editor-heading {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  margin-bottom: 0.6rem;
 }
 
 .input-box {
   width: 100%;
-  min-height: 55px;
-  max-height: 75px;
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  min-height: 60px;
+  max-height: 90px;
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  border: 1px solid var(--highlight);
+  border-radius: var(--radius-sm);
+  background-color: var(--primary-background);
+  color: var(--text-primary);
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-box:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.input-box::placeholder {
+  color: var(--text-faint);
+}
+
+.monaco-shell {
+  margin-top: 0.75rem;
+  border: 1px solid var(--highlight);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 .run-button {
-  margin-top: 10px;
-  padding: 10px 16px;
-  font-size: 16px;
-  background-color: #007bff;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  background-color: var(--primary-accent);
   border: none;
-  color: white;
+  color: #06131A;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .run-button:hover {
-  background-color: #0056b3;
+  background-color: #6AD7F7;
+}
+
+.run-button:active {
+  transform: scale(0.98);
+}
+
+.run-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.run-button:disabled:hover {
+  background-color: var(--primary-accent);
 }
 
 .output-heading {
-  margin-top: 20px;
-  font-size: 18px;
-  font-weight: bold;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
 }
 
 .output-box {
-  background-color: #f4f4f4;
-  color: black;
-  min-height: 55px;
-  max-height: 80px;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background-color: var(--surface-2);
+  color: var(--text-primary);
+  min-height: 60px;
+  max-height: 140px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--highlight);
+  border-radius: var(--radius-sm);
   white-space: pre-wrap;
-  overflow-y: scroll;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  margin-top: 0.4rem;
+}
+
+.output-box.pass {
+  color: #4ade80;
+  border-color: #4ade8055;
+}
+
+.output-box.fail {
+  color: #f87171;
+  border-color: #f8717155;
+}
+
+.output-box.warn {
+  color: #fbbf24;
+  border-color: #fbbf2455;
 }

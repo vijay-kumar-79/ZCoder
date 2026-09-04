@@ -1,93 +1,115 @@
+/* ============================================================
+   Problem card row. Tokens come from index.css.
+   ============================================================ */
+
 .problem-card {
   border: 1px solid var(--highlight);
-  border-radius: 8px;
-  padding: 16px;
-  margin: 10px 0;
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
   background-color: var(--secondary-background);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .problem-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15);
-  transform: translateY(-2px);
-  border-color: var(--primary-accent);
+  border-color: var(--border-strong);
+  background-color: #171D2B;
+  transform: translateY(-1px);
 }
 
 .card-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: var(--text-primary); /* Ensures text is visible */
-  margin-bottom: 8px;
+  gap: 0.9rem;
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
 }
 
 .problem-id {
-  color: var(--text-secondary);
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  min-width: 3ch;
 }
 
 .problem-title {
   flex-grow: 1;
-  color: var(--primary-accent); /* Changed from primary-accent to text-primary */
-  font-weight: 600; /* Slightly bolder for better visibility */
+  color: var(--text-primary);
 }
 
 .locked-icon {
-  color: var(--error);
-  filter: brightness(1.2); /* Makes lock icon more visible */
+  color: var(--text-faint);
 }
 
 .card-info {
-  margin-top: 10px;
-  font-size: 0.9rem;
+  margin-top: 0.55rem;
+  font-size: 0.88rem;
   display: flex;
-  gap: 16px;
+  gap: 1.25rem;
   flex-wrap: wrap;
-  color: var(--text-primary); /* Changed from text-secondary to primary */
+  align-items: center;
 }
 
 .platform {
-  color: var(--secondary-accent);
+  color: var(--primary-accent);
   font-weight: 500;
 }
 
-/* Updated difficulty colors to be more vibrant */
-.difficulty[style*="green"] {
-  color: #00ff88 !important; /* Brighter green for Easy */
-}
-.difficulty[style*="orange"] {
-  color: #ffaa00 !important; /* More vibrant orange for Medium */
-}
-.difficulty[style*="red"] {
-  color: #ff5555 !important; /* Brighter red for Hard */
+.difficulty {
+  font-weight: 600;
 }
 
 .accuracy {
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
 }
 
 .tags {
-  margin-top: 12px;
+  margin-top: 0.8rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0.4rem;
 }
 
 .tag {
   display: inline-block;
   background-color: var(--primary-background);
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  color: var(--text-primary);
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
   border: 1px solid var(--highlight);
-  transition: all 0.2s ease;
 }
 
-.tag:hover {
-  background-color: var(--highlight);
-  color: white;
+.bookmark-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+  font-size: 1.15rem;
+  color: var(--text-faint);
+  transition: color 0.2s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.bookmark-btn:hover {
+  color: var(--primary-accent);
+  transform: scale(1.08);
+}
+
+.bookmark-btn.active {
+  color: var(--primary-accent);
+}
+
+@media (max-width: 640px) {
+  .card-header {
+    flex-wrap: wrap;
+  }
 }

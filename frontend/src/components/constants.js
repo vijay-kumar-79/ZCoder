@@ -8,7 +8,12 @@ export const LANGUAGE_VERSIONS = {
 export const CODE_SNIPPETS = {
   python: `print("Hello, Python!")`,
   javascript: `console.log("Hello, JavaScript!");`,
-  cpp: `#include <bits/stdc++.h>
+  // Note: <bits/stdc++.h> is deliberately avoided — the judge's 128 MB / 10 s
+  // limits are too tight for the compiler to chew through that mega-header.
+  cpp: `#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
 using namespace std;
 
 int main() {
