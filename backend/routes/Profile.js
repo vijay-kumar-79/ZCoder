@@ -24,6 +24,10 @@ router.post("/profile/update", auth, async (req, res) => {
       profilePicture,
       codeforcesHandle,
       codeforcesRating,
+      leetcodeHandle,
+      leetcodeRating,
+      codechefHandle,
+      codechefRating,
       programmingLanguages,
       skills,
     } = req.body;
@@ -35,6 +39,10 @@ router.post("/profile/update", auth, async (req, res) => {
     dbUser.profilePicture = profilePicture || dbUser.profilePicture;
     dbUser.codeforcesHandle = codeforcesHandle || dbUser.codeforcesHandle;
     dbUser.codeforcesRating = codeforcesRating || dbUser.codeforcesRating;
+    dbUser.leetcodeHandle = leetcodeHandle || dbUser.leetcodeHandle;
+    dbUser.leetcodeRating = leetcodeRating || dbUser.leetcodeRating;
+    dbUser.codechefHandle = codechefHandle || dbUser.codechefHandle;
+    dbUser.codechefRating = codechefRating || dbUser.codechefRating;
     dbUser.programmingLanguages =
       programmingLanguages || dbUser.programmingLanguages;
     dbUser.skills = skills || dbUser.skills;
@@ -92,6 +100,10 @@ router.get("/profile", auth, async (req, res) => {
       profilePicture: dbUser.profilePicture,
       codeforcesHandle: dbUser.codeforcesHandle,
       codeforcesRating: dbUser.codeforcesRating,
+      leetcodeHandle: dbUser.leetcodeHandle,
+      leetcodeRating: dbUser.leetcodeRating,
+      codechefHandle: dbUser.codechefHandle,
+      codechefRating: dbUser.codechefRating,
       programmingLanguages: dbUser.programmingLanguages,
       skills: dbUser.skills,
     });
@@ -110,6 +122,10 @@ router.get("/:id", async (req, res) => {
       profilePicture: dbUser.profilePicture,
       codeforcesHandle: dbUser.codeforcesHandle,
       codeforcesRating: dbUser.codeforcesRating,
+      leetcodeHandle: dbUser.leetcodeHandle,
+      leetcodeRating: dbUser.leetcodeRating,
+      codechefHandle: dbUser.codechefHandle,
+      codechefRating: dbUser.codechefRating,
       programmingLanguages: dbUser.programmingLanguages,
       skills: dbUser.skills,
     });

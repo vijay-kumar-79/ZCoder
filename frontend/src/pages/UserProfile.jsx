@@ -13,11 +13,17 @@ const UserProfile = () => {
     profilePicture: "",
     codeforcesHandle: "",
     codeforcesRating: "",
+    leetcodeHandle: "",
+    leetcodeRating: "",
+    codechefHandle: "",
+    codechefRating: "",
     programmingLanguages: [],
     skills: [],
   });
   const [isEditing, setIsEditing] = useState(false);
   const [cfInfo, setCfInfo] = useState(null);
+  const [lcInfo, setLcInfo] = useState(null);
+  const [ccInfo, setCcInfo] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
   const navigate = useNavigate();
@@ -54,6 +60,12 @@ const UserProfile = () => {
         if (data.codeforcesHandle) {
           fetchCodeforcesInfo(data.codeforcesHandle);
         }
+        if (data.leetcodeHandle) {
+          fetchLeetCodeInfo(data.leetcodeHandle);
+        }
+        if (data.codechefHandle) {
+          fetchCodeChefInfo(data.codechefHandle);
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -79,6 +91,48 @@ const UserProfile = () => {
     }
   };
 
+  // Fetch LeetCode info (problems solved + contest rating)
+  const fetchLeetCodeInfo = async (handle) => {
+    try {
+      const res = await fetch(
+        `https://competeapi.vercel.app/user/leetcode/${handle}`
+      );
+      const data = await res.json();
+      const matchedUser = data?.data?.matchedUser ?? data?.matchedUser;
+      const contestRanking =
+        data?.data?.userContestRanking ?? data?.userContestRanking;
+      if (matchedUser) {
+        const allStats = matchedUser.submitStats?.acSubmissionNum?.find(
+          (s) => s.difficulty === "All"
+        );
+        setLcInfo({
+          username: matchedUser.username,
+          problemsSolved: allStats?.count ?? 0,
+          rating: contestRanking?.rating,
+        });
+      } else {
+        setLcInfo(null);
+      }
+    } catch (error) {
+      console.error("Error fetching LeetCode info:", error);
+      setLcInfo(null);
+    }
+  };
+
+  // Fetch CodeChef info (star rating + numeric rating)
+  const fetchCodeChefInfo = async (handle) => {
+    try {
+      const res = await fetch(
+        `https://competeapi.vercel.app/user/codechef/${handle}`
+      );
+      const data = await res.json();
+      setCcInfo(data);
+    } catch (error) {
+      console.error("Error fetching CodeChef info:", error);
+      setCcInfo(null);
+    }
+  };
+
   const handleEdit = () => setIsEditing(true);
   const handleProfileUpdate = async (updatedData) => {
     try {
@@ -98,8 +152,15 @@ const UserProfile = () => {
       setUserData(data.user || updatedData); // Prefer backend's updated user
       setIsEditing(false); // <-- This ensures you exit edit mode
       showToastMessage("Profile updated successfully!");
-      if ((data.user || updatedData).codeforcesHandle) {
-        fetchCodeforcesInfo((data.user || updatedData).codeforcesHandle);
+      const updatedUser = data.user || updatedData;
+      if (updatedUser.codeforcesHandle) {
+        fetchCodeforcesInfo(updatedUser.codeforcesHandle);
+      }
+      if (updatedUser.leetcodeHandle) {
+        fetchLeetCodeInfo(updatedUser.leetcodeHandle);
+      }
+      if (updatedUser.codechefHandle) {
+        fetchCodeChefInfo(updatedUser.codechefHandle);
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -148,6 +209,18 @@ const UserProfile = () => {
           <div className="codeforces-box">
             <h3>Codeforces Handle: {userData.codeforcesHandle || "Not set"}</h3>
             <p>Rating: {cfInfo?.rating ?? "N/A"}</p>
+          </div>
+          <div className="leetcode-box">
+            <h3>LeetCode Handle: {userData.leetcodeHandle || "Not set"}</h3>
+            <p>Problems Solved: {lcInfo ? lcInfo.problemsSolved : "N/A"}</p>
+            <p>Contest Rating: {lcInfo?.rating ?? "N/A"}</p>
+          </div>
+          <div className="codechef-box">
+            <h3>CodeChef Handle: {userData.codechefHandle || "Not set"}</h3>
+            <p>
+              Rating: {ccInfo?.rating_number ?? "N/A"}
+              {ccInfo?.rating ? ` (${ccInfo.rating})` : ""}
+            </p>
           </div>
           <div className="skills-box">
             <h3>Programming Languages</h3>

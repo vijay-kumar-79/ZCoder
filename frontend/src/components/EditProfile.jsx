@@ -183,6 +183,26 @@ const EditProfile = ({ userData, onUpdate, showToast }) => {
             />
           </div>
           <div className="form-group">
+            <label>LeetCode Handle</label>
+            <input
+              type="text"
+              name="leetcodeHandle"
+              value={formData.leetcodeHandle}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+          <div className="form-group">
+            <label>CodeChef Handle</label>
+            <input
+              type="text"
+              name="codechefHandle"
+              value={formData.codechefHandle}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+          <div className="form-group">
             <label>Programming Languages (comma separated)</label>
             <input
               type="text"
