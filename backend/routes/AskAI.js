@@ -47,7 +47,7 @@ async function getGroqChatCompletion(message) {
         content: message,
       },
     ],
-    model: "llama-3.3-70b-versatile",
+    model: "openai/gpt-oss-120b",
   });
 }
 

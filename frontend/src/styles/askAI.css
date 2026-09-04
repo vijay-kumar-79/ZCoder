@@ -25,7 +25,9 @@
 
 .ask-ai-container .conversation {
   flex: 1;
+  min-width: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   margin-bottom: 1rem;
   padding: 1.25rem;
   background: var(--primary-background);
@@ -49,9 +51,11 @@
 
 .ask-ai-container .message-content {
   max-width: 78%;
+  min-width: 0;
   padding: 0.7rem 1rem;
   border-radius: var(--radius-md);
   word-wrap: break-word;
+  overflow-wrap: anywhere;
   font-size: 0.95rem;
   line-height: 1.6;
 }
@@ -83,6 +87,7 @@
 
 .ask-ai-container .message-form input {
   flex: 1;
+  min-width: 0;
   padding: 0.7rem 0.9rem;
   border: 1px solid var(--highlight);
   border-radius: var(--radius-sm);
@@ -125,6 +130,13 @@
 /* Markdown body */
 .ask-ai-container .ai .react-markdown {
   color: var(--text-primary);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ask-ai-container .react-markdown img {
+  max-width: 100%;
+  height: auto;
 }
 
 .ask-ai-container .ai .react-markdown p {
