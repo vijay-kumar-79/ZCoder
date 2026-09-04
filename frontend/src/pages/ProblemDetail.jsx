@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import DOMPurify from "dompurify";
 import CodeEditor from "../components/CodeEditor";
-// import Loader from "../components/Loader";
 import "../styles/ProblemDetail.css";
 
 const ProblemDetail = () => {
@@ -25,7 +25,7 @@ const ProblemDetail = () => {
     if (jwtoken === null || jwtoken === undefined) {
       navigate("/login");
     }
-  });
+  }, [navigate]);
 
   useEffect(() => {
     async function fetchProblem() {
@@ -39,11 +39,7 @@ const ProblemDetail = () => {
       }
     }
     fetchProblem();
-  }, [titleSlug]);
-
-  const handleCodeChange = (newCode) => {
-    setCode(newCode);
-  };
+  }, [titleSlug, LEETCODE_API]);
 
   const handleSubmit = async () => {
     if (!code) return;
@@ -124,7 +120,8 @@ const ProblemDetail = () => {
               </h2>
               <div
                 className="question-content"
-                dangerouslySetInnerHTML={{ __html: data.question }}
+                // Sanitize third-party HTML before injecting it into the DOM
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.question) }}
               />
               <h2 className="sample-tests-title">Sample Test Cases</h2>
               <pre className="sample-tests-box">{data.exampleTestcases}</pre>

@@ -27,7 +27,6 @@ const ProblemCard = ({
           headers: { Authorization: `Bearer ${localStorage.getItem("jwtoken")}` },
         });
 
-        // Add null checks for response data
         const bookmarks = response.data?.bookmarks || [];
         setIsBookmarked(bookmarks.includes(titleSlug));
       } catch (error) {
@@ -64,21 +63,35 @@ const ProblemCard = ({
     }
   };
 
-  const getDifficultyColor = (difficulty) => {
+  const getDifficultyClass = (difficulty) => {
     switch (difficulty) {
       case "Easy":
-        return "green";
+        return "difficulty-easy";
       case "Medium":
-        return "orange";
+        return "difficulty-medium";
       case "Hard":
-        return "red";
+        return "difficulty-hard";
       default:
-        return "gray";
+        return "";
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClick();
     }
   };
 
   return (
-    <div className="problem-card" onClick={onClick}>
+    <div
+      className="problem-card"
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open problem ${title}`}
+    >
       <div className="card-header">
         <span className="problem-id">#{id}</span>
         <span className="problem-title">{title}</span>
@@ -86,18 +99,12 @@ const ProblemCard = ({
         <button
           onClick={toggleBookmark}
           disabled={loadingBookmark}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: isBookmarked ? "#00D4FF" : "#ccc",
-            transition: "color 0.3s ease",
-            padding: 0,
-            fontSize: "1.2rem"
-          }}
+          aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+          aria-pressed={isBookmarked}
+          className={`bookmark-btn${isBookmarked ? " active" : ""}`}
         >
           {loadingBookmark ? (
-            <span>...</span>
+            <span aria-hidden="true">...</span>
           ) : isBookmarked ? (
             <FaBookmark />
           ) : (
@@ -108,10 +115,7 @@ const ProblemCard = ({
 
       <div className="card-info">
         <span className="platform">{platform}</span>
-        <span
-          className="difficulty"
-          style={{ color: getDifficultyColor(difficulty) }}
-        >
+        <span className={`difficulty ${getDifficultyClass(difficulty)}`}>
           {difficulty}
         </span>
         <span className="accuracy">Accuracy: {Accuracy?.toFixed(2) || 0}%</span>
